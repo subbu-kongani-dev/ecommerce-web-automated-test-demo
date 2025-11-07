@@ -92,14 +92,18 @@ public class DriverManager {
                     ChromeOptions chromeOptions = new ChromeOptions();
                     if (headless) {
                         chromeOptions.addArguments("--headless=new");
+                        chromeOptions.addArguments("--window-size=1920,1080");
                     }
                     chromeOptions.addArguments("--disable-notifications");
                     chromeOptions.addArguments("--disable-popup-blocking");
                     chromeOptions.addArguments("--disable-dev-shm-usage");
                     chromeOptions.addArguments("--no-sandbox");
                     chromeOptions.addArguments("--disable-gpu");
+                    chromeOptions.addArguments("--disable-extensions");
+                    chromeOptions.addArguments("--disable-software-rasterizer");
+                    chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
                     chromeOptions.addArguments("--remote-allow-origins=*");
-                    chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-logging"});
+                    chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation", "enable-logging"});
                     driver.set(new ChromeDriver(chromeOptions));
                     break;
                     
@@ -107,12 +111,14 @@ public class DriverManager {
                     WebDriverManager.firefoxdriver().setup();
                     FirefoxOptions firefoxOptions = new FirefoxOptions();
                     if (headless) {
-                        firefoxOptions.addArguments("--headless");
+                        firefoxOptions.addArguments("-headless");
                     }
-                    firefoxOptions.addArguments("--disable-gpu");
+                    firefoxOptions.addArguments("--width=1920");
+                    firefoxOptions.addArguments("--height=1080");
                     firefoxOptions.addPreference("dom.webnotifications.enabled", false);
                     firefoxOptions.addPreference("dom.push.enabled", false);
-                    firefoxOptions.setCapability("moz:firefoxOptions", firefoxOptions);
+                    firefoxOptions.addPreference("media.navigator.enabled", false);
+                    firefoxOptions.addPreference("media.peerconnection.enabled", false);
                     driver.set(new FirefoxDriver(firefoxOptions));
                     break;
                     

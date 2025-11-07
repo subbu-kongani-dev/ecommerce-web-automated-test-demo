@@ -96,19 +96,31 @@ public class ConfigReader {
     
     /**
      * Gets the default browser for test execution.
+     * Checks system property first (from Maven -Dbrowser=chrome), then falls back to config.properties.
      * 
-     * @return Browser name (chrome, firefox, edge) from config.properties
+     * @return Browser name (chrome, firefox, edge) from system property or config.properties
      */
     public String getBrowser() {
+        String browser = System.getProperty("browser");
+        if (browser != null && !browser.isEmpty()) {
+            logger.info("Using browser from system property: " + browser);
+            return browser;
+        }
         return getProperty("browser");
     }
     
     /**
      * Determines if tests should run in headless mode.
+     * Checks system property first (from Maven -Dheadless=true), then falls back to config.properties.
      * 
      * @return true if headless mode is enabled, false otherwise
      */
     public boolean isHeadless() {
+        String headless = System.getProperty("headless");
+        if (headless != null && !headless.isEmpty()) {
+            logger.info("Using headless mode from system property: " + headless);
+            return Boolean.parseBoolean(headless);
+        }
         return Boolean.parseBoolean(getProperty("headless"));
     }
     
