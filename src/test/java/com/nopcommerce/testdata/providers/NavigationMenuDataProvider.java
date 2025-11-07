@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.testng.annotations.DataProvider;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * NavigationMenuDataProvider - Centralized DataProvider class for Navigation Menu tests
@@ -153,7 +154,7 @@ public class NavigationMenuDataProvider {
             // Filter for main menus only (subMenu is null or empty)
             List<NavigationMenuTestData> mainMenuData = allData.stream()
                 .filter(data -> data.getSubMenu() == null || data.getSubMenu().isEmpty())
-                .toList();
+                .collect(Collectors.toList());
             
             Object[][] data = new Object[mainMenuData.size()][];
             for (int i = 0; i < mainMenuData.size(); i++) {
@@ -190,7 +191,7 @@ public class NavigationMenuDataProvider {
             // Filter for submenus only (subMenu is not null and not empty)
             List<NavigationMenuTestData> submenuData = allData.stream()
                 .filter(data -> data.getSubMenu() != null && !data.getSubMenu().isEmpty())
-                .toList();
+                .collect(Collectors.toList());
             
             Object[][] data = new Object[submenuData.size()][];
             for (int i = 0; i < submenuData.size(); i++) {
@@ -262,7 +263,7 @@ public class NavigationMenuDataProvider {
                 .filter(data -> category.equals(data.getMainMenu()) && 
                                data.getSubMenu() != null && 
                                !data.getSubMenu().isEmpty())
-                .toList();
+                .collect(Collectors.toList());
             
             Object[][] data = new Object[categoryData.size()][];
             for (int i = 0; i < categoryData.size(); i++) {
