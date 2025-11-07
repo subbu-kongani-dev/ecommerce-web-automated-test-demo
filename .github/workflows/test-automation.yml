@@ -80,25 +80,84 @@ jobs:
         run: mvn test -Dbrowser=${{ matrix.browser }} -Dheadless=true
         continue-on-error: true
       
-      - name: Generate Test Report
+      - name: Generate Test Report Summary
         if: always()
         run: |
           echo "Test execution completed"
+          echo "## Test Artifacts Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
           if [ -d "reports" ]; then
-            echo "Reports directory exists"
+            echo "✅ **Test Reports:** $(ls -1 reports/ | wc -l) file(s)" >> $GITHUB_STEP_SUMMARY
             ls -la reports/
+          else
+            echo "⚠️ **Test Reports:** Not found" >> $GITHUB_STEP_SUMMARY
           fi
+          
+          if [ -d "screenshots" ]; then
+            echo "📸 **Screenshots:** $(ls -1 screenshots/ | wc -l) file(s)" >> $GITHUB_STEP_SUMMARY
+            ls -la screenshots/
+          else
+            echo "⚠️ **Screenshots:** Not found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ -d "logs" ]; then
+            echo "📋 **Log Files:** $(ls -1 logs/ | wc -l) file(s)" >> $GITHUB_STEP_SUMMARY
+            ls -la logs/
+          else
+            echo "⚠️ **Log Files:** Not found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ -d "test-output" ]; then
+            echo "📊 **TestNG Output:** Available" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.browser }}-${{ matrix.os }}-${{ github.run_number }}
+          path: screenshots/
+          retention-days: 30
+          if-no-files-found: warn
+      
+      - name: Upload Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.browser }}-${{ matrix.os }}-${{ github.run_number }}
+          path: logs/
+          retention-days: 30
+          if-no-files-found: warn
       
       - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports-${{ matrix.browser }}-${{ matrix.os }}
-          path: |
-            reports/
-            screenshots/
-            logs/
+          name: test-reports-${{ matrix.browser }}-${{ matrix.os }}-${{ github.run_number }}
+          path: reports/
           retention-days: 30
+          if-no-files-found: warn
+      
+      - name: Upload TestNG Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testng-results-${{ matrix.browser }}-${{ matrix.os }}-${{ github.run_number }}
+          path: |
+            test-output/
+            target/surefire-reports/
+          retention-days: 30
+          if-no-files-found: warn
+      
+      - name: Publish Test Results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Test Results (${{ matrix.browser }} on ${{ matrix.os }})
+          path: 'target/surefire-reports/TEST-*.xml'
+          reporter: java-junit
+          fail-on-error: false
       
       - name: Upload Screenshots on Failure
         if: failure()
