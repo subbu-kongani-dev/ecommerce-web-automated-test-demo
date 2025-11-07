@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import com.nopcommerce.base.BasePage;
+import com.nopcommerce.utils.WebElementActions;
 import java.util.List;
 
 public class SearchResultsPage extends BasePage {
@@ -45,10 +46,10 @@ public class SearchResultsPage extends BasePage {
     }
     
     public boolean isNoResultMessageDisplayed() {
-        return isDisplayed(noResultMessage);
+        return WebElementActions.isDisplayed(driver, noResultMessage, "No result message");
     }
     
     public boolean isSearchPageHeaderDisplayed() {
-        return isDisplayed(searchPageHeader);
+        return WebElementActions.isDisplayed(driver, searchPageHeader, "Search page header");
     }
 }

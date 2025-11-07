@@ -1,0 +1,22 @@
+[
+  {
+    "mainMenu": "InvalidMenu",
+    "subMenu": null,
+    "description": "Non-existent main menu"
+  },
+  {
+    "mainMenu": "Computers",
+    "subMenu": "InvalidSubmenu",
+    "description": "Valid menu with non-existent submenu"
+  },
+  {
+    "mainMenu": "",
+    "subMenu": null,
+    "description": "Empty main menu name"
+  },
+  {
+    "mainMenu": "Electronics",
+    "subMenu": "InvalidElectronics",
+    "description": "Valid Electronics menu with invalid submenu"
+  }
+]

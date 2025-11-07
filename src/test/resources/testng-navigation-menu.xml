@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="Navigation Menu Test Suite" verbose="1" parallel="false">
+    
+    <parameter name="browser" value="chrome"/>
+    
+    <listeners>
+        <listener class-name="com.nopcommerce.listeners.TestListener"/>
+    </listeners>
+    
+    <!-- Test Group 1: Individual Navigation Menu Tests -->
+    <test name="Navigation Menu - Individual Tests" preserve-order="true">
+        <classes>
+            <class name="com.nopcommerce.tests.NavigationMenuTest">
+                <methods>
+                    <include name="testNavigateToBooks"/>
+                    <include name="testNavigateToComputersDesktops"/>
+                    <include name="testNavigateToComputersNotebooks"/>
+                    <include name="testNavigateToComputersSoftware"/>
+                    <include name="testNavigateToElectronicsCameraPhoto"/>
+                    <include name="testNavigateToElectronicsCellPhones"/>
+                    <include name="testNavigateToApparelShoes"/>
+                    <include name="testNavigateToApparelClothing"/>
+                    <include name="testNavigateToApparelAccessories"/>
+                    <include name="testNavigateToDigitalDownloads"/>
+                    <include name="testNavigateToJewelry"/>
+                    <include name="testNavigateToGiftCards"/>
+                    <include name="testSequentialMenuNavigation"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <!-- Test Group 2: Data-Driven Navigation Tests -->
+    <test name="Navigation Menu - Data Driven Tests" preserve-order="true">
+        <classes>
+            <class name="com.nopcommerce.tests.NavigationMenuDataDrivenTest">
+                <methods>
+                    <include name="testAllMenuNavigation"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <!-- Test Group 3: Negative Tests -->
+    <test name="Navigation Menu - Negative Tests">
+        <classes>
+            <class name="com.nopcommerce.tests.NavigationMenuTest">
+                <methods>
+                    <include name="testInvalidMenuNavigation"/>
+                    <include name="testInvalidSubmenuNavigation"/>
+                </methods>
+            </class>
+            <class name="com.nopcommerce.tests.NavigationMenuDataDrivenTest">
+                <methods>
+                    <include name="testInvalidMenuNavigation"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+</suite>

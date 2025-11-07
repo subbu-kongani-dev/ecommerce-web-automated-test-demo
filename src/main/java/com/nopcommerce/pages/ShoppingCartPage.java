@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import com.nopcommerce.base.BasePage;
+import com.nopcommerce.utils.WebElementActions;
 
 public class ShoppingCartPage extends BasePage {
     
@@ -18,14 +19,14 @@ public class ShoppingCartPage extends BasePage {
     private WebElement emptyCartMessage;
     
     public boolean isShoppingCartPageDisplayed() {
-        return isDisplayed(pageTitle);
+        return WebElementActions.isDisplayed(driver, pageTitle, "Shopping Cart page title");
     }
     
     public boolean isCartEmpty() {
-        return isDisplayed(emptyCartMessage);
+        return WebElementActions.isDisplayed(driver, emptyCartMessage, "Empty cart message");
     }
     
     public String getCartPageTitle() {
-        return getText(pageTitle);
+        return WebElementActions.getText(driver, pageTitle, "Cart page title");
     }
 }

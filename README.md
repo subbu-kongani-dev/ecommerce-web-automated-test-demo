@@ -1,6 +1,13 @@
 # E-Commerce Web Automated Test Demo
 
-A comprehensive, scalable, and maintainable web automation testing framework built with Selenium WebDriver, TestNG, and the Page Object Model (POM) design pattern. This framework is designed for testing e-commerce applications with a focus on best practices and enterprise-level patterns.
+A comprehensive, scalable, and maintainable web automation testing framework built with Selenium WebDriver, TestNG, and the Page Object Model (POM) design pattern. This framework demonstrates **enterprise-grade test automation** with externalized test data, centralized utilities, and industry best practices for testing e-commerce applications.
+
+**Latest Updates (November 2025)**:
+- ✅ Enhanced data-driven testing with external JSON/CSV files
+- ✅ Centralized DataProvider utilities for reusable test data
+- ✅ Refactored BasePage with WebElementActions utility class
+- ✅ Navigation menu testing with 16 comprehensive scenarios
+- ✅ Industry-standard architecture following separation of concerns
 
 [![Java](https://img.shields.io/badge/Java-11-orange.svg)](https://www.oracle.com/java/)
 [![Selenium](https://img.shields.io/badge/Selenium-4.15.0-green.svg)](https://www.selenium.dev/)
@@ -272,7 +279,406 @@ Edit `testng.xml` to enable parallel execution:
 </suite>
 ```
 
-## 🚀 CI/CD with GitHub Actions
+## 🎯 Enhanced Data-Driven Testing
+
+This framework implements **industry best practices** for data-driven testing with externalized test data and centralized DataProvider utilities.
+
+### Key Features
+
+- ✅ **Externalized Test Data**: Test data stored in JSON/CSV files, not hardcoded
+- ✅ **Centralized DataProviders**: Reusable data provider utility classes
+- ✅ **Type-Safe Models**: POJO classes for test data representation
+- ✅ **Separation of Concerns**: Test logic separated from test data
+- ✅ **Easy Maintenance**: Non-technical users can modify JSON/CSV files
+- ✅ **Version Control**: Test data tracked separately from code
+
+### Architecture
+
+```
+src/test/
+├── java/com/nopcommerce/
+│   ├── testdata/
+│   │   ├── models/
+│   │   │   └── NavigationMenuTestData.java      # POJO for test data
+│   │   ├── readers/
+│   │   │   ├── JsonDataReader.java              # JSON data reader utility
+│   │   │   └── CsvDataReader.java               # CSV data reader utility
+│   │   └── providers/
+│   │       └── NavigationMenuDataProvider.java  # Centralized DataProviders
+│   └── tests/
+│       └── NavigationMenuEnhancedTest.java      # Data-driven tests
+└── resources/testdata/
+    ├── navigation-menu-data.json                # Test data (JSON)
+    ├── navigation-menu-data.csv                 # Test data (CSV)
+    └── navigation-menu-negative-data.json       # Negative test data
+```
+
+### Test Data Example (JSON)
+
+```json
+[
+  {
+    "mainMenu": "Computers",
+    "subMenu": "Desktops",
+    "expectedUrl": "desktops",
+    "description": "Computers → Desktops"
+  },
+  {
+    "mainMenu": "Books",
+    "subMenu": null,
+    "expectedUrl": "books",
+    "description": "Books main menu"
+  }
+]
+```
+
+### Using Centralized DataProvider
+
+```java
+@Test(dataProvider = "navigationMenuDataFromJson",
+      dataProviderClass = NavigationMenuDataProvider.class)
+public void testNavigationFromJson(String mainMenu, String subMenu, 
+                                   String expectedUrl, String description) {
+    navigationMenu.navigateTo(mainMenu, subMenu);
+    Assert.assertTrue(driver.getCurrentUrl().contains(expectedUrl));
+}
+```
+
+### Benefits
+
+**Before** (Hardcoded Data):
+```java
+@DataProvider
+public Object[][] getData() {
+    return new Object[][] {
+        {"Books", null, "books"},
+        {"Computers", "Desktops", "desktops"},
+        // ... hardcoded in test class
+    };
+}
+```
+
+**After** (External Data):
+```java
+// Data in JSON file - edit without recompiling!
+@Test(dataProvider = "navigationMenuDataFromJson",
+      dataProviderClass = NavigationMenuDataProvider.class)
+public void testNavigation(...) { ... }
+```
+
+**Advantages**:
+- ✅ No recompilation needed to change test data
+- ✅ Business analysts can update test data
+- ✅ Same DataProvider reusable across multiple test classes
+- ✅ Support for multiple formats (JSON, CSV, future: Excel, Database)
+
+### Adding New Test Data
+
+Simply edit the JSON file:
+
+```json
+{
+  "mainMenu": "NewCategory",
+  "subMenu": "NewSubMenu",
+  "expectedUrl": "new-url",
+  "description": "New test scenario"
+}
+```
+
+Run tests - **no code changes needed!**
+
+## 🧪 Navigation Menu Testing
+
+Comprehensive navigation menu testing with 16 test scenarios covering all menu paths.
+
+### Test Coverage
+
+| Category | Scenarios | Description |
+|----------|-----------|-------------|
+| Main Menus | 4 | Books, Digital downloads, Jewelry, Gift Cards |
+| Computers Submenus | 3 | Desktops, Notebooks, Software |
+| Electronics Submenus | 2 | Camera & photo, Cell phones |
+| Apparel Submenus | 3 | Shoes, Clothing, Accessories |
+| Negative Tests | 4 | Invalid menu/submenu handling |
+
+### Running Navigation Tests
+
+```bash
+# Run all navigation tests
+mvn test -Dtest=NavigationMenuEnhancedTest
+
+# Run specific test method
+mvn test -Dtest=NavigationMenuEnhancedTest#testNavigationFromJson
+
+# Run category-specific tests
+mvn test -Dtest=NavigationMenuEnhancedTest#testComputersSubmenu
+```
+
+### Available DataProviders
+
+| DataProvider | Source | Scenarios | Purpose |
+|--------------|--------|-----------|---------|
+| `navigationMenuDataFromJson` | JSON | 12 | All menus ⭐ Recommended |
+| `navigationMenuDataFromCsv` | CSV | 12 | Alternative format |
+| `mainMenuOnlyData` | JSON (filtered) | 4 | Main menus only |
+| `submenuOnlyData` | JSON (filtered) | 8 | Submenus only |
+| `computersSubmenuData` | JSON (filtered) | 3 | Computers category |
+| `electronicsSubmenuData` | JSON (filtered) | 2 | Electronics category |
+| `apparelSubmenuData` | JSON (filtered) | 3 | Apparel category |
+| `invalidNavigationMenuData` | JSON | 4 | Negative tests |
+
+## 🏗 Framework Architecture
+
+### Page Object Model (POM)
+
+This framework implements the Page Object Model design pattern with enhanced separation of concerns.
+
+### Enhanced BasePage Architecture
+
+**Before Refactoring**:
+```java
+public class BasePage {
+    // Page infrastructure + Element interactions mixed
+    protected void click(WebElement element) { ... }
+    protected void type(WebElement element, String text) { ... }
+    // ... 15+ methods
+}
+```
+
+**After Refactoring** (Best Practice):
+```
+BasePage (Page Infrastructure)
+    ↓ delegates to
+WebElementActions (Element Interactions)
+```
+
+**Benefits**:
+- ✅ **Single Responsibility**: BasePage handles page initialization only
+- ✅ **Reusability**: WebElementActions can be used anywhere, not just in page objects
+- ✅ **Maintainability**: Changes to element interactions in one place
+- ✅ **Testability**: Can unit test WebElementActions independently
+
+### WebElementActions Utility
+
+**Location**: `src/main/java/com/nopcommerce/utils/WebElementActions.java`
+
+**Key Methods**:
+```java
+// Basic interactions with enhanced logging
+WebElementActions.click(driver, element, "Login Button");
+WebElementActions.type(driver, field, "text", "Email Field");
+
+// Dropdown operations
+WebElementActions.selectByVisibleText(driver, dropdown, "Option");
+WebElementActions.selectByValue(driver, dropdown, "value");
+
+// Advanced operations
+WebElementActions.scrollToElement(driver, element);
+WebElementActions.clickUsingJavaScript(driver, element);
+WebElementActions.highlightElement(driver, element);
+WebElementActions.moveToElement(driver, element);  // For hover actions
+```
+
+**Features**:
+- Built-in explicit waits
+- Comprehensive error handling
+- Optional element names for better logging
+- JavaScript execution support
+- Thread-safe (stateless design)
+
+### Project Structure (Enhanced)
+
+```
+src/
+├── main/java/com/nopcommerce/
+│   ├── base/
+│   │   └── BasePage.java                    # Page infrastructure only
+│   ├── pages/
+│   │   ├── HomePage.java
+│   │   ├── LoginPage.java
+│   │   ├── RegisterPage.java
+│   │   ├── NavigationMenu.java              # Dynamic menu navigation
+│   │   ├── SearchResultsPage.java
+│   │   ├── ShoppingCartPage.java
+│   │   └── AccountPage.java
+│   ├── utils/
+│   │   ├── WebElementActions.java           # ⭐ Centralized element interactions
+│   │   ├── DriverManager.java
+│   │   ├── ConfigReader.java
+│   │   ├── WaitUtil.java
+│   │   └── ScreenshotUtil.java
+│   └── listeners/
+│       ├── TestListener.java
+│       └── ExtentReportManager.java
+│
+├── test/java/com/nopcommerce/
+│   ├── base/
+│   │   └── BaseTest.java
+│   ├── testdata/
+│   │   ├── models/
+│   │   │   └── NavigationMenuTestData.java  # ⭐ POJO for test data
+│   │   ├── readers/
+│   │   │   ├── JsonDataReader.java          # ⭐ JSON data reader
+│   │   │   └── CsvDataReader.java           # ⭐ CSV data reader
+│   │   └── providers/
+│   │       └── NavigationMenuDataProvider.java  # ⭐ Centralized DataProviders
+│   └── tests/
+│       ├── LoginTest.java
+│       ├── RegistrationTest.java
+│       ├── SearchTest.java
+│       ├── HomePageTest.java
+│       └── NavigationMenuEnhancedTest.java  # ⭐ Data-driven tests
+│
+└── test/resources/
+    ├── testdata/
+    │   ├── navigation-menu-data.json        # ⭐ External test data
+    │   ├── navigation-menu-data.csv
+    │   └── navigation-menu-negative-data.json
+    ├── testng.xml
+    └── config.properties
+```
+
+### Design Patterns Implemented
+
+1. **Page Object Model (POM)**: Encapsulates page elements and behaviors
+2. **Singleton Pattern**: ConfigReader, DriverManager
+3. **Factory Pattern**: DriverManager for browser initialization
+4. **Utility/Helper Pattern**: WebElementActions, WaitUtil
+5. **Delegation Pattern**: BasePage delegates to WebElementActions
+6. **Data Transfer Object (DTO)**: NavigationMenuTestData POJO
+7. **Strategy Pattern**: Multiple DataProvider strategies (JSON, CSV)
+
+## 📊 Test Reports
+
+### Extent Reports
+
+Beautiful HTML reports are generated after each test execution.
+
+**Location**: `reports/TestReport_<timestamp>.html`
+
+**Features**:
+- Test execution summary with pass/fail counts
+- Detailed test steps with timestamps
+- Screenshots for failed tests
+- Browser and OS information
+- Execution time metrics
+- Interactive dashboard
+
+**View Reports**:
+```bash
+# After running tests
+open reports/TestReport_*.html  # macOS
+start reports/TestReport_*.html # Windows
+xdg-open reports/TestReport_*.html # Linux
+```
+
+### TestNG Reports
+
+Default TestNG reports are also generated.
+
+**Location**: `test-output/index.html`
+
+### Console Logs
+
+Detailed logs are displayed in the console with:
+- Test execution flow
+- Element interactions
+- Navigation steps
+- Assertion results
+- Error messages with stack traces
+
+**Enhanced Log Readability**: Visual separation between test executions with empty lines for better distinction.
+
+## 🔍 Best Practices Implemented
+
+### Code Quality
+
+- ✅ **SOLID Principles**: Single Responsibility, Open/Closed, Dependency Inversion
+- ✅ **DRY Principle**: No code duplication
+- ✅ **Separation of Concerns**: Test logic, page logic, and utilities separated
+- ✅ **Type Safety**: Strong typing with POJOs
+- ✅ **Clean Code**: Meaningful names, small methods, clear intent
+
+### Testing Best Practices
+
+- ✅ **Data-Driven Testing**: External test data in JSON/CSV
+- ✅ **Page Object Model**: Clean separation of concerns
+- ✅ **Explicit Waits**: No Thread.sleep(), proper synchronization
+- ✅ **Independent Tests**: Each test can run independently
+- ✅ **Descriptive Assertions**: Clear assertion messages
+- ✅ **Negative Testing**: Error scenarios covered
+
+### Framework Best Practices
+
+- ✅ **Centralized Utilities**: Reusable utility classes
+- ✅ **Configuration Management**: External config.properties
+- ✅ **Logging**: Comprehensive logging at all levels
+- ✅ **Screenshot on Failure**: Automatic failure evidence
+- ✅ **Thread-Safe**: ThreadLocal for parallel execution
+- ✅ **Version Control**: Proper .gitignore, no sensitive data
+
+### Industry Standards
+
+This framework follows patterns used by:
+- **Google** - External test data management
+- **Microsoft** - Centralized DataProviders
+- **Amazon** - Page Object Model with utilities
+- **Netflix** - Data-driven with type-safe models
+
+## 🛠 Framework Components
+
+### 1. BasePage
+
+**Purpose**: Foundation for all Page Object classes
+
+**Responsibilities**:
+- WebDriver instance management
+- PageFactory initialization
+- Page-level utilities (getTitle, getCurrentUrl)
+- Delegates element interactions to WebElementActions
+
+### 2. WebElementActions Utility
+
+**Purpose**: Centralized element interaction methods
+
+**Features**:
+- 20+ reusable methods
+- Built-in waits and error handling
+- Enhanced logging with element names
+- JavaScript execution support
+- Stateless design for thread-safety
+
+### 3. NavigationMenu Page
+
+**Purpose**: Dynamic menu navigation with hover support
+
+**Features**:
+- Parameterized XPath for flexibility
+- Hover action for dropdown menus
+- Comprehensive error handling
+- Support for main menus and submenus
+
+**Usage**:
+```java
+navigationMenu.navigateTo("Computers", "Desktops");  // Hover + click
+navigationMenu.navigateTo("Books", null);             // Direct click
+```
+
+### 4. DataProvider Utilities
+
+**Purpose**: External test data management
+
+**Components**:
+- **JsonDataReader**: Read JSON test data
+- **CsvDataReader**: Read CSV test data
+- **NavigationMenuDataProvider**: Centralized DataProviders
+- **NavigationMenuTestData**: POJO model
+
+**Benefits**:
+- No hardcoded test data
+- Easy to maintain and extend
+- Reusable across test classes
+- Non-technical users can modify data
 
 This framework is fully integrated with GitHub Actions for continuous integration and continuous delivery. Tests are automatically executed on every push and pull request.
 

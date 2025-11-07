@@ -1,0 +1,13 @@
+mainMenu,subMenu,expectedUrl,description
+Books,,books,Books main menu
+Digital downloads,,digital-downloads,Digital downloads main menu
+Jewelry,,jewelry,Jewelry main menu
+Gift Cards,,gift-cards,Gift Cards main menu
+Computers,Desktops,desktops,Computers → Desktops
+Computers,Notebooks,notebooks,Computers → Notebooks
+Computers,Software,software,Computers → Software
+Electronics,Camera & photo,camera-photo,Electronics → Camera & photo
+Electronics,Cell phones,cell-phones,Electronics → Cell phones
+Apparel,Shoes,shoes,Apparel → Shoes
+Apparel,Clothing,clothing,Apparel → Clothing
+Apparel,Accessories,accessories,Apparel → Accessories

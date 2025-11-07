@@ -30,4 +30,10 @@
         </classes>
     </test>
     
+    <test name="Navigation Menu Tests" preserve-order="true">
+        <classes>
+            <class name="com.nopcommerce.tests.NavigationMenuEnhancedTest"/>
+        </classes>
+    </test>
+    
 </suite>

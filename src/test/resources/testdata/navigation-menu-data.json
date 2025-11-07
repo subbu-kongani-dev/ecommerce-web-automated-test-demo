@@ -1,0 +1,74 @@
+[
+  {
+    "mainMenu": "Books",
+    "subMenu": null,
+    "expectedUrl": "books",
+    "description": "Books main menu"
+  },
+  {
+    "mainMenu": "Digital downloads",
+    "subMenu": null,
+    "expectedUrl": "digital-downloads",
+    "description": "Digital downloads main menu"
+  },
+  {
+    "mainMenu": "Jewelry",
+    "subMenu": null,
+    "expectedUrl": "jewelry",
+    "description": "Jewelry main menu"
+  },
+  {
+    "mainMenu": "Gift Cards",
+    "subMenu": null,
+    "expectedUrl": "gift-cards",
+    "description": "Gift Cards main menu"
+  },
+  {
+    "mainMenu": "Computers",
+    "subMenu": "Desktops",
+    "expectedUrl": "desktops",
+    "description": "Computers → Desktops"
+  },
+  {
+    "mainMenu": "Computers",
+    "subMenu": "Notebooks",
+    "expectedUrl": "notebooks",
+    "description": "Computers → Notebooks"
+  },
+  {
+    "mainMenu": "Computers",
+    "subMenu": "Software",
+    "expectedUrl": "software",
+    "description": "Computers → Software"
+  },
+  {
+    "mainMenu": "Electronics",
+    "subMenu": "Camera & photo",
+    "expectedUrl": "camera-photo",
+    "description": "Electronics → Camera & photo"
+  },
+  {
+    "mainMenu": "Electronics",
+    "subMenu": "Cell phones",
+    "expectedUrl": "cell-phones",
+    "description": "Electronics → Cell phones"
+  },
+  {
+    "mainMenu": "Apparel",
+    "subMenu": "Shoes",
+    "expectedUrl": "shoes",
+    "description": "Apparel → Shoes"
+  },
+  {
+    "mainMenu": "Apparel",
+    "subMenu": "Clothing",
+    "expectedUrl": "clothing",
+    "description": "Apparel → Clothing"
+  },
+  {
+    "mainMenu": "Apparel",
+    "subMenu": "Accessories",
+    "expectedUrl": "accessories",
+    "description": "Apparel → Accessories"
+  }
+]

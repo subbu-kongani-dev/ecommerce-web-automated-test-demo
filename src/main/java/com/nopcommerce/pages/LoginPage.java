@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import com.nopcommerce.base.BasePage;
+import com.nopcommerce.utils.WebElementActions;
 
 public class LoginPage extends BasePage {
     
@@ -24,16 +25,15 @@ public class LoginPage extends BasePage {
     private WebElement errorMessage;
     
     public void enterEmail(String email) {
-        type(emailField, email);
+        WebElementActions.type(driver, emailField, email, "Email field");
     }
     
     public void enterPassword(String password) {
-        type(passwordField, password);
+        WebElementActions.type(driver, passwordField, password, "Password field");
     }
     
     public HomePage clickLoginButton() {
-        click(loginButton);
-        logger.info("Clicked on Login button");
+        WebElementActions.click(driver, loginButton, "Login button");
         return new HomePage(driver);
     }
     
@@ -44,10 +44,10 @@ public class LoginPage extends BasePage {
     }
     
     public boolean isErrorMessageDisplayed() {
-        return isDisplayed(errorMessage);
+        return WebElementActions.isDisplayed(driver, errorMessage, "Error message");
     }
     
     public String getErrorMessage() {
-        return getText(errorMessage);
+        return WebElementActions.getText(driver, errorMessage, "Error message");
     }
 }
