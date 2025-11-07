@@ -9,20 +9,20 @@ A comprehensive, scalable, and maintainable web automation testing framework bui
 
 ## 📋 Table of Contents
 
-- [Project Overview](#-project-overview)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Prerequisites](#-prerequisites)
-- [Installation & Setup](#-installation--setup)
-- [Configuration](#-configuration)
-- [Running Tests](#-running-tests)
-- [Test Reports](#-test-reports)
-- [Framework Architecture](#-framework-architecture)
-- [Best Practices](#-best-practices)
-- [Troubleshooting](#-troubleshooting)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation & Setup](#installation-setup)
+- [Configuration](#configuration)
+- [Running Tests](#running-tests)
+- [Test Reports](#test-reports)
+- [Framework Architecture](#framework-architecture)
+- [Best Practices](#best-practices-implemented)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## 🎯 Project Overview
 
