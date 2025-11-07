@@ -99,6 +99,15 @@ $RECYCLE.BIN/
 *.msix
 *.msm
 *.msp
+
+# Test Reports & Artifacts
+reports/
+screenshots/
+logs/
+test-output/
+
+# GitHub Actions
+.github/workflows/.artifacts/
 *.lnk
 
 # Test output

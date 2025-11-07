@@ -6,6 +6,8 @@ A comprehensive, scalable, and maintainable web automation testing framework bui
 [![Selenium](https://img.shields.io/badge/Selenium-4.15.0-green.svg)](https://www.selenium.dev/)
 [![TestNG](https://img.shields.io/badge/TestNG-7.8.0-red.svg)](https://testng.org/)
 [![Maven](https://img.shields.io/badge/Maven-Build-blue.svg)](https://maven.apache.org/)
+[![CI/CD](https://github.com/yourusername/ecommerce-web-automated-test-demo/workflows/E-Commerce%20Test%20Automation%20CI/CD/badge.svg)](https://github.com/yourusername/ecommerce-web-automated-test-demo/actions)
+[![Scheduled Tests](https://github.com/yourusername/ecommerce-web-automated-test-demo/workflows/Scheduled%20Smoke%20Tests/badge.svg)](https://github.com/yourusername/ecommerce-web-automated-test-demo/actions)
 
 ## 📋 Table of Contents
 
@@ -17,6 +19,7 @@ A comprehensive, scalable, and maintainable web automation testing framework bui
 - [Installation & Setup](#installation-setup)
 - [Configuration](#configuration)
 - [Running Tests](#running-tests)
+- [CI/CD with GitHub Actions](#cicd-with-github-actions)
 - [Test Reports](#test-reports)
 - [Framework Architecture](#framework-architecture)
 - [Best Practices](#best-practices-implemented)
@@ -263,6 +266,109 @@ Edit `testng.xml` to enable parallel execution:
     <!-- test configuration -->
 </suite>
 ```
+
+## 🚀 CI/CD with GitHub Actions
+
+This framework is fully integrated with GitHub Actions for continuous integration and continuous delivery. Tests are automatically executed on every push and pull request.
+
+### Available Workflows
+
+#### 1. Main CI/CD Pipeline (`test-automation.yml`)
+
+**Triggers:**
+- Push to `main`, `master`, or `develop` branches
+- Pull requests to `main`, `master`, or `develop` branches
+- Manual trigger with custom parameters
+
+**Features:**
+- ✅ Runs tests on multiple browsers (Chrome, Firefox)
+- ✅ Matrix strategy for parallel execution on Ubuntu, Windows, and macOS
+- ✅ Automatic browser installation
+- ✅ Maven dependency caching for faster builds
+- ✅ Test report and screenshot uploads as artifacts
+- ✅ TestNG results publishing
+- ✅ Code quality checks
+
+**Manual Trigger:**
+```bash
+# Go to Actions tab in GitHub → Select "E-Commerce Test Automation CI/CD" → Run workflow
+# Choose browser (chrome/firefox/edge) and headless mode (true/false)
+```
+
+#### 2. Scheduled Smoke Tests (`scheduled-tests.yml`)
+
+**Triggers:**
+- Automatic daily runs at 2 AM UTC
+- Manual trigger
+
+**Features:**
+- ✅ Daily smoke test execution
+- ✅ Automatic failure notifications
+- ✅ 30-day artifact retention
+- ✅ Runs on latest Chrome in headless mode
+
+#### 3. Dependency Check (`dependency-check.yml`)
+
+**Triggers:**
+- Weekly on Monday at 9 AM UTC
+- When `pom.xml` is modified
+- Manual trigger
+
+**Features:**
+- ✅ Dependency tree analysis
+- ✅ Check for dependency updates
+- ✅ Check for plugin updates
+- ✅ Dependency conflict detection
+
+### Viewing Test Results
+
+1. **In GitHub Actions:**
+   - Go to the "Actions" tab in your repository
+   - Click on any workflow run
+   - View logs, test results, and download artifacts
+
+2. **Artifacts Include:**
+   - HTML test reports (Extent Reports)
+   - Screenshots of failed tests
+   - Detailed execution logs
+   - TestNG XML reports
+
+3. **Test Reports:**
+   - Automatically published as GitHub Actions artifacts
+   - Available for download for 30 days
+   - Viewable in the Actions summary page
+
+### Setting Up GitHub Actions
+
+1. **Push your code to GitHub:**
+   ```bash
+   git add .
+   git commit -m "Add GitHub Actions CI/CD"
+   git push origin main
+   ```
+
+2. **Enable Actions:**
+   - GitHub Actions are automatically enabled for public repositories
+   - For private repos, go to Settings → Actions → Enable Actions
+
+3. **Update Badge URLs:**
+   - Replace `yourusername` in README badges with your GitHub username
+   - Replace `ecommerce-web-automated-test-demo` with your repository name
+
+4. **Secrets Configuration (Optional):**
+   - Go to Settings → Secrets and variables → Actions
+   - Add any sensitive configuration (if needed for future enhancements)
+
+### Running Tests Locally vs CI/CD
+
+| Feature | Local Execution | GitHub Actions CI/CD |
+|---------|----------------|----------------------|
+| Browser | Any (Chrome/Firefox/Edge) | Chrome/Firefox |
+| OS | Your machine | Ubuntu/Windows/macOS |
+| Headless | Optional | Default: Yes |
+| Parallel | TestNG config | Matrix strategy |
+| Reports | Local directory | GitHub Artifacts |
+| Scheduling | Manual | Automated (daily) |
 
 ## 📊 Test Reports
 
