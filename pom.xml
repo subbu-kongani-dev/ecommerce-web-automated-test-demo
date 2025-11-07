@@ -147,7 +147,6 @@
                     </suiteXmlFiles>
                     <systemPropertyVariables>
                         <java.util.logging.config.file>src/main/resources/logging.properties</java.util.logging.config.file>
-                        <os.name>${os.name}</os.name>
                     </systemPropertyVariables>
                     <argLine>-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager</argLine>
                 </configuration>
