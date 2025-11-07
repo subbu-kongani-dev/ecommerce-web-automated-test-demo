@@ -99,11 +99,8 @@ public class DriverManager {
                     chromeOptions.addArguments("--disable-dev-shm-usage");
                     chromeOptions.addArguments("--no-sandbox");
                     chromeOptions.addArguments("--disable-gpu");
-                    chromeOptions.addArguments("--disable-extensions");
-                    chromeOptions.addArguments("--disable-software-rasterizer");
-                    chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
                     chromeOptions.addArguments("--remote-allow-origins=*");
-                    chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation", "enable-logging"});
+                    chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
                     driver.set(new ChromeDriver(chromeOptions));
                     break;
                     
