@@ -16,11 +16,25 @@ on:
           - chrome
           - firefox
           - edge
+      os:
+        description: 'Operating system to run tests on'
+        required: true
+        default: 'ubuntu-latest'
+        type: choice
+        options:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
       headless:
         description: 'Run in headless mode'
         required: true
         default: 'true'
         type: boolean
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
 
 jobs:
   test:
@@ -102,11 +116,12 @@ jobs:
           path: 'target/surefire-reports/TEST-*.xml'
           reporter: java-junit
           fail-on-error: false
+        continue-on-error: true
 
-  test-windows:
-    name: Run Tests on Windows
-    runs-on: windows-latest
-    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+  test-on-demand:
+    name: Run Tests on ${{ github.event.inputs.os }}
+    runs-on: ${{ github.event.inputs.os }}
+    if: github.event_name == 'workflow_dispatch'
     
     steps:
       - name: Checkout Repository
@@ -119,46 +134,27 @@ jobs:
           distribution: 'temurin'
           cache: maven
       
-      - name: Run Tests on Chrome
-        run: mvn test -Dbrowser=chrome -Dheadless=true
+      - name: Install Chrome Browser
+        if: github.event.inputs.browser == 'chrome' && github.event.inputs.os == 'ubuntu-latest'
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
+      
+      - name: Install Firefox Browser
+        if: github.event.inputs.browser == 'firefox' && github.event.inputs.os == 'ubuntu-latest'
+        uses: browser-actions/setup-firefox@latest
+        with:
+          firefox-version: latest
+      
+      - name: Run Tests
+        run: mvn test -Dbrowser=${{ github.event.inputs.browser }} -Dheadless=${{ github.event.inputs.headless }} -Dos.name=${{ github.event.inputs.os }}
         continue-on-error: true
       
-      - name: Upload Windows Test Reports
+      - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports-windows
-          path: |
-            reports/
-            screenshots/
-            logs/
-          retention-days: 30
-
-  test-macos:
-    name: Run Tests on macOS
-    runs-on: macos-latest
-    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
-    
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: maven
-      
-      - name: Run Tests on Chrome
-        run: mvn test -Dbrowser=chrome -Dheadless=true
-        continue-on-error: true
-      
-      - name: Upload macOS Test Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-reports-macos
+          name: test-reports-${{ github.event.inputs.browser }}-${{ github.event.inputs.os }}
           path: |
             reports/
             screenshots/

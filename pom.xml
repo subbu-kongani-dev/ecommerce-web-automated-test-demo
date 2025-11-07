@@ -71,6 +71,61 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <!-- Linux Profile -->
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <properties>
+                <os.name>linux</os.name>
+            </properties>
+        </profile>
+
+        <!-- Windows Profile -->
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <os.name>windows</os.name>
+            </properties>
+        </profile>
+
+        <!-- macOS Profile -->
+        <profile>
+            <id>macos</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <os.name>macos</os.name>
+            </properties>
+        </profile>
+
+        <!-- CI/CD Profile -->
+        <profile>
+            <id>ci</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                </property>
+            </activation>
+            <properties>
+                <headless>true</headless>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -92,6 +147,7 @@
                     </suiteXmlFiles>
                     <systemPropertyVariables>
                         <java.util.logging.config.file>src/main/resources/logging.properties</java.util.logging.config.file>
+                        <os.name>${os.name}</os.name>
                     </systemPropertyVariables>
                     <argLine>-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager</argLine>
                 </configuration>
