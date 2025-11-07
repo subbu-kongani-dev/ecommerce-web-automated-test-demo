@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NopCommerce Automation Test Suite" parallel="tests" thread-count="3" verbose="1">
+    
+    <listeners>
+        <listener class-name="com.nopcommerce.listeners.TestListener"/>
+    </listeners>
+    
+    <test name="Home Page Tests" preserve-order="true">
+        <classes>
+            <class name="com.nopcommerce.tests.HomePageTest"/>
+        </classes>
+    </test>
+    
+    <test name="Registration Tests" preserve-order="true">
+        <classes>
+            <class name="com.nopcommerce.tests.RegistrationTest"/>
+        </classes>
+    </test>
+    
+    <test name="Login Tests" preserve-order="true">
+        <classes>
+            <class name="com.nopcommerce.tests.LoginTest"/>
+        </classes>
+    </test>
+    
+    <test name="Search Tests" preserve-order="true">
+        <classes>
+            <class name="com.nopcommerce.tests.SearchTest"/>
+        </classes>
+    </test>
+    
+</suite>
