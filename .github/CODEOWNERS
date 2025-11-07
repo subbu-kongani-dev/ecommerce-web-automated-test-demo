@@ -1,0 +1,16 @@
+# Code Owners for ecommerce-web-automated-test-demo
+# These owners will be automatically requested for review when someone opens a pull request
+
+# Default owners for everything in the repo
+* @subramanyamkongani
+
+# Workflow files - require approval from repo owner
+/.github/workflows/ @subramanyamkongani
+
+# Configuration files - require approval
+/pom.xml @subramanyamkongani
+/src/main/resources/*.properties @subramanyamkongani
+
+# Core framework files - require approval
+/src/main/java/com/nopcommerce/base/ @subramanyamkongani
+/src/main/java/com/nopcommerce/utils/ @subramanyamkongani

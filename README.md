@@ -8,6 +8,10 @@ A comprehensive, scalable, and maintainable web automation testing framework bui
 [![Maven](https://img.shields.io/badge/Maven-Build-blue.svg)](https://maven.apache.org/)
 [![CI/CD](https://github.com/yourusername/ecommerce-web-automated-test-demo/workflows/E-Commerce%20Test%20Automation%20CI/CD/badge.svg)](https://github.com/yourusername/ecommerce-web-automated-test-demo/actions)
 [![Scheduled Tests](https://github.com/yourusername/ecommerce-web-automated-test-demo/workflows/Scheduled%20Smoke%20Tests/badge.svg)](https://github.com/yourusername/ecommerce-web-automated-test-demo/actions)
+[![Security](https://img.shields.io/badge/Security-Protected-brightgreen.svg)](.github/SECURITY.md)
+[![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-blue.svg)](.github/CONTRIBUTING.md)
+
+> **⚠️ PUBLIC REPOSITORY NOTICE:** This is a public repository. All code is visible to everyone. See [Security Policy](.github/SECURITY.md) for access control information.
 
 ## 📋 Table of Contents
 
@@ -24,6 +28,7 @@ A comprehensive, scalable, and maintainable web automation testing framework bui
 - [Framework Architecture](#framework-architecture)
 - [Best Practices](#best-practices-implemented)
 - [Troubleshooting](#troubleshooting)
+- [Security](#security)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -518,23 +523,164 @@ screenshots/
 - Use unique test data
 - Avoid shared resources
 
+## 🔒 Security
+
+### Repository Access Control
+
+This is a **PUBLIC REPOSITORY**. Here's what that means:
+
+| Who | Can Do | Cannot Do |
+|-----|--------|-----------|
+| **Anyone** | ✅ View code<br>✅ Fork repository<br>✅ Submit Pull Requests<br>✅ Open Issues | ❌ Push directly to branches<br>❌ Merge Pull Requests<br>❌ Modify settings |
+| **Repository Owner** | ✅ All of the above<br>✅ Merge PRs<br>✅ Manage settings | - |
+
+### Branch Protection
+
+The `main` and `develop` branches are **protected**:
+
+- ✅ All changes require Pull Request review
+- ✅ CI/CD tests must pass before merge
+- ✅ Code owner approval required
+- ❌ No direct pushes allowed (even for owner)
+- ❌ No force pushes allowed
+- ❌ No branch deletion allowed
+
+### What Happens If Someone Tries to Push?
+
+If someone tries to push changes directly to protected branches:
+
+```bash
+git push origin main
+# Result: ❌ REJECTED
+# Error: GH006: Protected branch update failed
+# Required: Pull Request with approval
+```
+
+**The ONLY way to add code:**
+1. Fork the repository
+2. Create feature branch
+3. Submit Pull Request
+4. Pass automated tests
+5. Get owner approval
+6. Owner merges the PR
+
+### Security Documentation
+
+- 📋 [**Security Policy**](.github/SECURITY.md) - Access control details
+- 📝 [**Contributing Guidelines**](.github/CONTRIBUTING.md) - How to contribute
+- 🛡️ [**Branch Protection Guide**](.github/BRANCH_PROTECTION_GUIDE.md) - Setup instructions
+- 👥 [**Code Owners**](.github/CODEOWNERS) - Review requirements
+
+### Quick Security Setup
+
+**⚠️ IMPORTANT:** After cloning, set up branch protection immediately:
+
+1. Go to: **Settings → Branches → Add branch protection rule**
+2. Branch pattern: `main`
+3. Enable:
+   - ✅ Require pull request reviews (1 approval)
+   - ✅ Require status checks to pass
+   - ✅ Require conversation resolution
+   - ✅ Restrict who can push (no exceptions)
+   - ✅ Do not allow force pushes
+   - ✅ Do not allow deletions
+
+**Full setup guide:** [Branch Protection Guide](.github/BRANCH_PROTECTION_GUIDE.md)
+
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these guidelines:
+We welcome contributions! Here's how to get started:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### Quick Start for Contributors
+
+1. **Fork the Repository**
+   ```bash
+   # Click "Fork" on GitHub, then:
+   git clone https://github.com/YOUR-USERNAME/ecommerce-web-automated-test-demo.git
+   cd ecommerce-web-automated-test-demo
+   ```
+
+2. **Create Feature Branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+
+3. **Make Your Changes**
+   - Write clean, well-documented code
+   - Add tests for new features
+   - Update documentation
+
+4. **Test Locally**
+   ```bash
+   mvn clean test
+   mvn test -Dbrowser=chrome -Dheadless=true
+   mvn test -Dbrowser=firefox -Dheadless=true
+   ```
+
+5. **Commit Your Changes**
+   ```bash
+   git add .
+   git commit -m "feat: add amazing feature"
+   ```
+
+6. **Push to Your Fork**
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+
+7. **Create Pull Request**
+   - Go to original repository on GitHub
+   - Click "New Pull Request"
+   - Fill out the PR template
+   - Wait for review and approval
+
+### Contribution Guidelines
+
+📖 **Read First:** [Contributing Guidelines](.github/CONTRIBUTING.md)
+
+**PR Requirements:**
+- [ ] Tests pass in CI/CD pipeline
+- [ ] Code follows project conventions
+- [ ] Documentation updated
+- [ ] No merge conflicts
+- [ ] PR template filled out completely
+
+**Commit Message Format:**
+```
+type(scope): subject
+
+Examples:
+feat(login): add remember me functionality
+fix(search): resolve null pointer exception
+docs(readme): update installation instructions
+test(cart): add shopping cart tests
+```
 
 ### Code Standards
 
 - Follow Java naming conventions
 - Add JavaDoc comments for public methods
-- Write clean, readable code
-- Include unit tests for utilities
-- Update documentation for new features
+- Use Page Object Model pattern
+- Write descriptive test method names
+- Include proper assertions
+- Keep methods focused and single-purpose
+
+### What We're Looking For
+
+✅ **Accepted:**
+- Bug fixes with tests
+- New test scenarios
+- Page Objects for new pages
+- Utility enhancements
+- Documentation improvements
+- Performance optimizations
+
+❌ **Not Accepted:**
+- Breaking changes without discussion
+- Code without tests
+- Malicious code
+- Changes to CI/CD without permission
+- PRs that fail tests
 
 ## 📄 License
 
