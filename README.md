@@ -24,22 +24,28 @@ A comprehensive, scalable, and maintainable web automation testing framework bui
 
 ## 📋 Table of Contents
 
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Installation & Setup](#installation-setup)
-- [Configuration](#configuration)
-- [Running Tests](#running-tests)
-- [CI/CD with GitHub Actions](#cicd-with-github-actions)
-- [Test Reports](#test-reports)
-- [Framework Architecture](#framework-architecture)
-- [Best Practices](#best-practices-implemented)
-- [Troubleshooting](#troubleshooting)
-- [Security](#security)
-- [Contributing](#contributing)
-- [License](#license)
+- [Project Overview](#-project-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Prerequisites](#-prerequisites)
+- [Quick Start Guide](#-quick-start-guide)
+- [Configuration](#️-configuration)
+- [Running Tests](#-running-tests)
+- [Enhanced Data-Driven Testing](#-enhanced-data-driven-testing)
+- [Navigation Menu Testing](#-navigation-menu-testing)
+- [Framework Architecture](#-framework-architecture)
+- [Framework Components](#-framework-components)
+- [CI/CD with GitHub Actions](#-cicd-with-github-actions)
+- [Test Reports](#-test-reports)
+- [Best Practices Implemented](#-best-practices-implemented)
+- [Troubleshooting](#-troubleshooting)
+- [Security](#-security)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Author](#-author)
+- [Acknowledgments](#-acknowledgments)
+- [Support](#-support)
 
 ## 🎯 Project Overview
 
@@ -997,108 +1003,6 @@ This framework is fully integrated with GitHub Actions for continuous integratio
 | Parallel | TestNG config | Matrix strategy |
 | Reports | Local directory | GitHub Artifacts |
 | Scheduling | Manual | Automated (daily) |
-
-## 📊 Test Reports
-
-### Extent Reports
-
-After test execution, HTML reports are generated in the `reports/` directory:
-
-```
-reports/
-└── TestReport_YYYY-MM-DD_HH-MM-SS.html
-```
-
-Open the HTML file in any browser to view:
-- Test execution summary
-- Pass/Fail statistics
-- Detailed test steps
-- Screenshots for failed tests
-- Execution timeline
-- Environment details
-
-### Log Files
-
-Detailed logs are stored in the `logs/` directory:
-
-```
-logs/
-└── automation.log
-```
-
-Logs include:
-- Test execution flow
-- Browser actions
-- Element interactions
-- Error messages and stack traces
-
-### Screenshots
-
-Failed test screenshots are saved in the `screenshots/` directory:
-
-```
-screenshots/
-└── testName_YYYYMMDD_HHMMSS.png
-```
-
-## 🏗 Framework Architecture
-
-### Design Patterns
-
-1. **Page Object Model (POM)**
-   - Encapsulates page elements and actions
-   - Improves code maintainability and reusability
-   - Reduces code duplication
-
-2. **Singleton Pattern**
-   - Used in ConfigReader for single instance
-   - Ensures consistent configuration across tests
-
-3. **ThreadLocal Pattern**
-   - Used in DriverManager for thread safety
-   - Enables parallel test execution
-
-### Key Components
-
-#### 1. BasePage
-- Contains common methods used across all pages
-- Handles element interactions (click, type, wait, etc.)
-- Provides reusable utilities
-
-#### 2. BaseTest
-- Setup and teardown for all test classes
-- WebDriver initialization
-- Screenshot capture on failure
-- Logging setup
-
-#### 3. DriverManager
-- Manages WebDriver lifecycle
-- Supports multiple browsers
-- Thread-safe implementation
-- Automatic driver setup using WebDriverManager
-
-#### 4. ConfigReader
-- Reads configuration from properties file
-- Provides singleton access to configuration
-- Type-safe configuration methods
-
-#### 5. TestListener
-- Implements TestNG ITestListener
-- Enhances reporting with Extent Reports
-- Captures test execution events
-
-## 📝 Best Practices Implemented
-
-1. **Separation of Concerns**: Test logic separated from page logic
-2. **DRY Principle**: Reusable methods in base classes
-3. **Explicit Waits**: Smart waits for element availability
-4. **Logging**: Comprehensive logging at all levels
-5. **Exception Handling**: Graceful error handling
-6. **Configuration Management**: Externalized configuration
-7. **Thread Safety**: ThreadLocal pattern for parallel execution
-8. **Clean Code**: Meaningful names and proper documentation
-9. **Version Control**: Git-friendly structure
-10. **CI/CD Ready**: Maven-based execution
 
 ## 🔧 Troubleshooting
 
