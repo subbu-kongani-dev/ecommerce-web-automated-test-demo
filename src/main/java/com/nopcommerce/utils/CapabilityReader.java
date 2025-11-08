@@ -136,22 +136,33 @@ public class CapabilityReader {
     /**
      * Substitutes environment variables in configuration.
      * Supports ${VAR_NAME} format.
+     * First checks environment variables, then falls back to config.properties.
      * 
      * @param capability BrowserCapability object to process
      */
     private static void substituteEnvironmentVariables(BrowserCapability capability) {
         if (capability.getLambdatest() != null) {
             BrowserCapability.LambdaTestConfig ltConfig = capability.getLambdatest();
+            ConfigReader config = ConfigReader.getInstance();
             
             // Substitute LT_USERNAME
             if (ltConfig.getUser() != null && ltConfig.getUser().contains("${")) {
                 String envVar = extractEnvVarName(ltConfig.getUser());
                 String value = System.getenv(envVar);
-                if (value != null) {
+                
+                if (value != null && !value.isEmpty()) {
                     ltConfig.setUser(value);
-                    logger.debug("Substituted environment variable: " + envVar);
+                    logger.debug("Substituted " + envVar + " from environment variable");
                 } else {
                     logger.warn("Environment variable not found: " + envVar);
+                    // Fallback to config.properties
+                    String configValue = config.getLambdaTestUsername();
+                    if (configValue != null && !configValue.isEmpty()) {
+                        ltConfig.setUser(configValue);
+                        logger.info("Using LambdaTest username from config.properties");
+                    } else {
+                        logger.error("LambdaTest username not found in environment or config.properties");
+                    }
                 }
             }
             
@@ -159,11 +170,20 @@ public class CapabilityReader {
             if (ltConfig.getAccessKey() != null && ltConfig.getAccessKey().contains("${")) {
                 String envVar = extractEnvVarName(ltConfig.getAccessKey());
                 String value = System.getenv(envVar);
-                if (value != null) {
+                
+                if (value != null && !value.isEmpty()) {
                     ltConfig.setAccessKey(value);
-                    logger.debug("Substituted environment variable: " + envVar);
+                    logger.debug("Substituted " + envVar + " from environment variable");
                 } else {
                     logger.warn("Environment variable not found: " + envVar);
+                    // Fallback to config.properties
+                    String configValue = config.getLambdaTestAccessKey();
+                    if (configValue != null && !configValue.isEmpty()) {
+                        ltConfig.setAccessKey(configValue);
+                        logger.info("Using LambdaTest access key from config.properties");
+                    } else {
+                        logger.error("LambdaTest access key not found in environment or config.properties");
+                    }
                 }
             }
         }

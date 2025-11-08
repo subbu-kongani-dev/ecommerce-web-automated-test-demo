@@ -1,0 +1,11 @@
+# Local Configuration Example File
+# Copy this file to 'config.local.properties' and add your actual credentials
+# config.local.properties is automatically ignored by Git
+
+# LambdaTest Credentials
+# Get your credentials from: https://accounts.lambdatest.com/
+lt.username=your_lambdatest_username_here
+lt.accesskey=your_lambdatest_access_key_here
+
+# Note: This example file is committed to Git as a reference
+# The actual config.local.properties file with real credentials is NOT committed

@@ -240,6 +240,115 @@ test.email=testuser@example.com
 test.password=Test@123
 ```
 
+### Secure Credentials Management 🔒
+
+This framework follows **industry best practices** (OWASP, 12-Factor App) for secure credential management. Credentials are **NEVER** stored in Git.
+
+#### 📁 Files Structure
+
+```
+src/main/resources/
+├── config.properties                    ✅ Committed (NO credentials)
+├── config.local.properties.example      ✅ Committed (template only)
+└── config.local.properties              ❌ Git Ignored (your actual credentials)
+```
+
+#### 🚀 Quick Setup for Eclipse/IDE Users
+
+**Step 1: Copy the example file**
+```bash
+cd src/main/resources/
+cp config.local.properties.example config.local.properties
+```
+
+**Step 2: Add your LambdaTest credentials**
+
+Open `config.local.properties` in Eclipse and add your credentials:
+```properties
+# Get credentials from: https://accounts.lambdatest.com/
+lt.username=your_lambdatest_username
+lt.accesskey=your_lambdatest_access_key
+```
+
+**Step 3: Done!** ✅ 
+- This file is automatically ignored by Git
+- Your credentials are secure and never committed
+
+#### 🔐 Credential Resolution Priority
+
+The framework checks for credentials in this order:
+
+1. **Environment Variables** (Recommended for CI/CD)
+   ```bash
+   export LT_USERNAME="your_username"
+   export LT_ACCESS_KEY="your_access_key"
+   ```
+
+2. **config.local.properties** (Recommended for Eclipse/IDE)
+   - Secure local file
+   - Git automatically ignores it
+   - Each developer has their own
+
+3. **config.properties** (Not recommended)
+   - Fallback only
+   - Logs warning if used
+
+#### 💡 For CI/CD (GitHub Actions)
+
+Set secrets in GitHub repository:
+1. Go to: **Settings** → **Secrets and variables** → **Actions**
+2. Add secrets:
+   - `LT_USERNAME` = your username
+   - `LT_ACCESS_KEY` = your access key
+
+The framework automatically uses these in CI/CD pipelines.
+
+#### ⚠️ Security Rules
+
+**DO** ✅
+- Use `config.local.properties` for local development
+- Use environment variables for CI/CD
+- Keep credentials in password manager
+- Verify `.gitignore` includes `config.local.properties`
+
+**DON'T** ❌
+- Never commit actual credentials to Git
+- Don't share your `config.local.properties` file
+- Don't put credentials in `config.properties`
+- Don't hard-code credentials in test files
+
+#### 🆕 For New Team Members
+
+When someone new joins your team:
+```bash
+# 1. Clone the repository
+git clone <repo-url>
+
+# 2. Copy the template
+cd src/main/resources/
+cp config.local.properties.example config.local.properties
+
+# 3. Edit with their credentials
+nano config.local.properties
+
+# 4. Run tests - Git will never track their credentials ✅
+```
+
+#### 🔍 Troubleshooting Credentials
+
+**Error: "Environment variable not found"**
+- **For Eclipse users:** Use `config.local.properties` (Method 2)
+- Eclipse doesn't inherit terminal environment variables
+
+**Error: "Response code 401" (Unauthorized)**
+- Verify credentials are correct at https://accounts.lambdatest.com/
+- Ensure you copied the FULL access key (40-50 characters)
+- Check for typos in username or access key
+
+**Credentials work in terminal but not Eclipse**
+- This is normal - Eclipse has separate environment
+- Use `config.local.properties` file instead (recommended)
+
 ### Browser Capabilities Configuration
 
 The framework supports YAML-based dynamic browser capability management for both local and cloud (LambdaTest) execution.

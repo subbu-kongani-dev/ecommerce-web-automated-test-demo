@@ -292,9 +292,31 @@ public class DriverFactory {
             String accessKey = ltConfig.getAccessKey();
             String hubUrl = ltConfig.getHubUrl();
             
-            if (username == null || accessKey == null) {
-                throw new IllegalStateException(
-                    "LambdaTest credentials not set. Please set LT_USERNAME and LT_ACCESS_KEY environment variables");
+            // Check if credentials are null or still contain placeholder values
+            if (username == null || accessKey == null || 
+                username.contains("${") || accessKey.contains("${")) {
+                String errorMsg = "\n" +
+                    "========================================================================================================\n" +
+                    "ERROR: LambdaTest credentials not configured!\n" +
+                    "========================================================================================================\n" +
+                    "Please set the following environment variables before running tests on LambdaTest:\n\n" +
+                    "For macOS/Linux (Terminal):\n" +
+                    "  export LT_USERNAME=\"your_lambdatest_username\"\n" +
+                    "  export LT_ACCESS_KEY=\"your_lambdatest_access_key\"\n\n" +
+                    "For Windows (Command Prompt):\n" +
+                    "  set LT_USERNAME=your_lambdatest_username\n" +
+                    "  set LT_ACCESS_KEY=your_lambdatest_access_key\n\n" +
+                    "For Windows (PowerShell):\n" +
+                    "  $env:LT_USERNAME=\"your_lambdatest_username\"\n" +
+                    "  $env:LT_ACCESS_KEY=\"your_lambdatest_access_key\"\n\n" +
+                    "To get your credentials:\n" +
+                    "  1. Log in to https://accounts.lambdatest.com/\n" +
+                    "  2. Go to Automation → Access Key\n" +
+                    "  3. Copy your Username and Access Key\n\n" +
+                    "Alternatively, you can run tests locally by setting execution.platform=LOCAL in config.properties\n" +
+                    "========================================================================================================\n";
+                logger.error(errorMsg);
+                throw new IllegalStateException(errorMsg);
             }
             
             // Create capabilities for LambdaTest

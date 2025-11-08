@@ -34,7 +34,9 @@ public class ConfigReader {
     private static final Logger logger = LogManager.getLogger(ConfigReader.class);
     private static ConfigReader instance;
     private Properties properties;
+    private Properties localProperties;
     private static final String CONFIG_FILE_PATH = "src/main/resources/config.properties";
+    private static final String LOCAL_CONFIG_FILE_PATH = "src/main/resources/config.local.properties";
     
     /**
      * Private constructor to prevent direct instantiation.
@@ -42,6 +44,7 @@ public class ConfigReader {
      */
     private ConfigReader() {
         loadProperties();
+        loadLocalProperties();
     }
     
     /**
@@ -72,6 +75,22 @@ public class ConfigReader {
         } catch (IOException e) {
             logger.error("Failed to load configuration properties", e);
             throw new RuntimeException("Configuration file not found: " + CONFIG_FILE_PATH);
+        }
+    }
+    
+    /**
+     * Loads local configuration properties from config.local.properties file.
+     * This file contains sensitive data and is excluded from Git.
+     * Method fails silently if file doesn't exist (for CI/CD environments).
+     */
+    private void loadLocalProperties() {
+        localProperties = new Properties();
+        try (FileInputStream fis = new FileInputStream(LOCAL_CONFIG_FILE_PATH)) {
+            localProperties.load(fis);
+            logger.info("Local configuration properties loaded successfully from " + LOCAL_CONFIG_FILE_PATH);
+        } catch (IOException e) {
+            logger.debug("Local config file not found (this is normal for CI/CD): " + LOCAL_CONFIG_FILE_PATH);
+            // Don't throw exception - local config is optional
         }
     }
     
@@ -180,5 +199,77 @@ public class ConfigReader {
      */
     public int getThreadCount() {
         return Integer.parseInt(getProperty("thread.count"));
+    }
+    
+    /**
+     * Gets the LambdaTest username.
+     * Priority order:
+     * 1. Environment variable LT_USERNAME (for CI/CD)
+     * 2. config.local.properties file (for local development)
+     * 3. config.properties file (fallback, not recommended)
+     * 
+     * @return LambdaTest username or null if not configured
+     */
+    public String getLambdaTestUsername() {
+        // Priority 1: Environment variable (for CI/CD)
+        String username = System.getenv("LT_USERNAME");
+        if (username != null && !username.isEmpty()) {
+            logger.debug("Using LT_USERNAME from environment variable");
+            return username;
+        }
+        
+        // Priority 2: Local config file (for Eclipse/local development)
+        if (localProperties != null) {
+            String localUsername = localProperties.getProperty("lt.username");
+            if (localUsername != null && !localUsername.isEmpty()) {
+                logger.debug("Using LT username from config.local.properties");
+                return localUsername;
+            }
+        }
+        
+        // Priority 3: Main config file (fallback, not recommended)
+        String configUsername = getProperty("lt.username");
+        if (configUsername != null && !configUsername.isEmpty()) {
+            logger.warn("Using LT username from config.properties (not secure - use config.local.properties instead)");
+            return configUsername;
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Gets the LambdaTest access key.
+     * Priority order:
+     * 1. Environment variable LT_ACCESS_KEY (for CI/CD)
+     * 2. config.local.properties file (for local development)
+     * 3. config.properties file (fallback, not recommended)
+     * 
+     * @return LambdaTest access key or null if not configured
+     */
+    public String getLambdaTestAccessKey() {
+        // Priority 1: Environment variable (for CI/CD)
+        String accessKey = System.getenv("LT_ACCESS_KEY");
+        if (accessKey != null && !accessKey.isEmpty()) {
+            logger.debug("Using LT_ACCESS_KEY from environment variable");
+            return accessKey;
+        }
+        
+        // Priority 2: Local config file (for Eclipse/local development)
+        if (localProperties != null) {
+            String localAccessKey = localProperties.getProperty("lt.accesskey");
+            if (localAccessKey != null && !localAccessKey.isEmpty()) {
+                logger.debug("Using LT access key from config.local.properties");
+                return localAccessKey;
+            }
+        }
+        
+        // Priority 3: Main config file (fallback, not recommended)
+        String configAccessKey = getProperty("lt.accesskey");
+        if (configAccessKey != null && !configAccessKey.isEmpty()) {
+            logger.warn("Using LT access key from config.properties (not secure - use config.local.properties instead)");
+            return configAccessKey;
+        }
+        
+        return null;
     }
 }
