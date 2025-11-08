@@ -7,6 +7,9 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -127,6 +130,18 @@ public class DriverManager {
                     }
                     driver.set(new EdgeDriver(edgeOptions));
                     break;
+                 
+                case "safari":
+                	WebDriverManager.safaridriver().setup();
+                	SafariOptions safariOptions = new SafariOptions();
+                	safariOptions.setCapability("safari.cleanSession", true);
+                	safariOptions.setCapability("safari.ignoreFraudWarning", true);
+                	safariOptions.setCapability("safari.allowPopups", false);
+                	safariOptions.setAcceptInsecureCerts(true);
+                	safariOptions.setCapability("safari.enableAutomaticInspection", false);
+                	safariOptions.setCapability("safari.enableRemoteAutomation", true);
+                	driver.set(new SafariDriver(safariOptions));
+                	break;
                     
                 default:
                     logger.error("Invalid browser: " + browser);
