@@ -91,47 +91,100 @@ ecommerce-web-automated-test-demo/
 │
 ├── src/
 │   ├── main/
-│   │   ├── java/
-│   │   │   └── com/nopcommerce/
-│   │   │       ├── base/
-│   │   │       │   └── BasePage.java          # Base page with common methods
-│   │   │       ├── pages/
-│   │   │       │   ├── HomePage.java          # Home page object
-│   │   │       │   ├── LoginPage.java         # Login page object
-│   │   │       │   ├── RegistrationPage.java  # Registration page object
-│   │   │       │   └── SearchPage.java        # Search page object
-│   │   │       ├── utils/
-│   │   │       │   ├── ConfigReader.java      # Configuration reader
-│   │   │       │   ├── DriverManager.java     # WebDriver management
-│   │   │       │   ├── ExcelReader.java       # Excel data reader
-│   │   │       │   ├── ExtentManager.java     # Extent report manager
-│   │   │       │   ├── ScreenshotUtil.java    # Screenshot utilities
-│   │   │       │   └── WaitHelper.java        # Explicit wait utilities
-│   │   │       └── listeners/
-│   │   │           └── TestListener.java      # TestNG listener
+│   │   ├── java/com/nopcommerce/
+│   │   │   ├── base/
+│   │   │   │   └── BasePage.java                    # Base page with page infrastructure
+│   │   │   ├── pages/
+│   │   │   │   ├── HomePage.java                    # Home page object
+│   │   │   │   ├── LoginPage.java                   # Login page object
+│   │   │   │   ├── RegisterPage.java                # Registration page object
+│   │   │   │   ├── AccountPage.java                 # Account page object
+│   │   │   │   ├── NavigationMenu.java              # Dynamic navigation menu
+│   │   │   │   ├── SearchResultsPage.java           # Search results page
+│   │   │   │   └── ShoppingCartPage.java            # Shopping cart page
+│   │   │   ├── factory/
+│   │   │   │   └── DriverFactory.java               # WebDriver factory for browser creation
+│   │   │   ├── models/
+│   │   │   │   └── BrowserCapability.java           # Browser capability POJO
+│   │   │   ├── utils/
+│   │   │   │   ├── ConfigReader.java                # Configuration reader
+│   │   │   │   ├── DriverManager.java               # WebDriver lifecycle management
+│   │   │   │   ├── CapabilityReader.java            # YAML capability reader
+│   │   │   │   ├── WebElementActions.java           # Centralized element interactions
+│   │   │   │   ├── WaitUtil.java                    # Explicit wait utilities
+│   │   │   │   └── ScreenshotUtil.java              # Screenshot utilities
+│   │   │   └── listeners/
+│   │   │       ├── TestListener.java                # TestNG listener for events
+│   │   │       └── ExtentReportManager.java         # Extent report management
+│   │   │
 │   │   └── resources/
-│   │       ├── config.properties              # Configuration file
-│   │       ├── log4j2.xml                     # Log4j2 configuration
-│   │       └── logging.properties             # Java logging configuration
+│   │       ├── config.properties                    # Main configuration file
+│   │       ├── config.local.properties              # Local credentials (git ignored)
+│   │       ├── config.local.properties.example      # Template for local config
+│   │       ├── log4j2.xml                           # Log4j2 configuration
+│   │       ├── logging.properties                   # Java logging configuration
+│   │       └── capabilities/                        # Browser capability configs
+│   │           ├── chrome_local.yaml                # Chrome local configuration
+│   │           ├── chrome_lambdatest.yaml           # Chrome LambdaTest config
+│   │           ├── firefox_local.yaml               # Firefox local configuration
+│   │           ├── firefox_lambdatest.yaml          # Firefox LambdaTest config
+│   │           ├── edge_local.yaml                  # Edge local configuration
+│   │           ├── edge_lambdatest.yaml             # Edge LambdaTest config
+│   │           ├── safari_local.yaml                # Safari local configuration
+│   │           └── safari_lambdatest.yaml           # Safari LambdaTest config
 │   │
 │   └── test/
-│       ├── java/
-│       │   └── com/nopcommerce/
-│       │       ├── base/
-│       │       │   └── BaseTest.java          # Base test class
-│       │       └── tests/
-│       │           ├── HomePageTest.java      # Home page tests
-│       │           ├── LoginTest.java         # Login tests
-│       │           ├── RegistrationTest.java  # Registration tests
-│       │           └── SearchTest.java        # Search tests
+│       ├── java/com/nopcommerce/
+│       │   ├── base/
+│       │   │   └── BaseTest.java                    # Base test class with setup/teardown
+│       │   ├── testdata/
+│       │   │   ├── models/
+│       │   │   │   └── NavigationMenuTestData.java  # POJO for navigation test data
+│       │   │   ├── readers/
+│       │   │   │   ├── JsonDataReader.java          # JSON test data reader
+│       │   │   │   └── CsvDataReader.java           # CSV test data reader
+│       │   │   └── providers/
+│       │   │       └── NavigationMenuDataProvider.java # Centralized DataProviders
+│       │   ├── tests/
+│       │   │   ├── HomePageTest.java                # Home page tests
+│       │   │   ├── LoginTest.java                   # Login tests
+│       │   │   ├── RegistrationTest.java            # Registration tests
+│       │   │   ├── SearchTest.java                  # Search tests
+│       │   │   └── NavigationMenuEnhancedTest.java  # Data-driven navigation tests
+│       │   └── examples/
+│       │       └── CapabilityDemoTest.java          # Capability configuration demo
+│       │
 │       └── resources/
-│           └── testng.xml                     # TestNG suite configuration
+│           ├── testdata/                            # External test data files
+│           │   ├── navigation-menu-data.json        # Navigation test data (JSON)
+│           │   ├── navigation-menu-data.csv         # Navigation test data (CSV)
+│           │   └── navigation-menu-negative-data.json # Negative test scenarios
+│           ├── testng.xml                           # Main TestNG suite
+│           ├── testng-smoke.xml                     # Smoke test suite
+│           ├── testng-navigation-menu.xml           # Navigation menu suite
+│           ├── testng-parallel-browsers.xml         # Parallel browser execution
+│           ├── capability-demo-suite.xml            # Capability demo suite
+│           └── capability-demo-parallel-suite.xml   # Parallel capability demo
 │
-├── logs/                                       # Test execution logs
-├── screenshots/                                # Test failure screenshots
-├── reports/                                    # HTML test reports
-├── pom.xml                                     # Maven configuration
-└── README.md                                   # Project documentation
+├── .github/                                         # GitHub Actions & Documentation
+│   ├── workflows/
+│   │   ├── test-automation.yml                      # Main CI/CD pipeline
+│   │   ├── scheduled-tests.yml                      # Scheduled smoke tests
+│   │   └── dependency-check.yml                     # Dependency management
+│   ├── SECURITY.md                                  # Security policy
+│   ├── CONTRIBUTING.md                              # Contributing guidelines
+│   └── CODEOWNERS.yml                               # Code ownership
+│
+├── logs/                                            # Test execution logs (auto-generated)
+├── screenshots/                                     # Test failure screenshots (auto-generated)
+├── reports/                                         # HTML test reports (auto-generated)
+├── target/                                          # Maven build output (auto-generated)
+├── test-output/                                     # TestNG output (auto-generated)
+│
+├── .gitignore                                       # Git ignore rules
+├── pom.xml                                          # Maven configuration
+├── LICENSE                                          # MIT License
+└── README.md                                        # Project documentation
 ```
 
 ## 📦 Prerequisites
