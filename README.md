@@ -8,6 +8,8 @@ A comprehensive, scalable, and maintainable web automation testing framework bui
 - ✅ Refactored BasePage with WebElementActions utility class
 - ✅ Navigation menu testing with 16 comprehensive scenarios
 - ✅ Industry-standard architecture following separation of concerns
+- ✅ GitHub Actions CI/CD with multi-browser support and scheduled tests
+- ✅ LambdaTest cloud execution support
 
 [![Java](https://img.shields.io/badge/Java-11-orange.svg)](https://www.oracle.com/java/)
 [![Selenium](https://img.shields.io/badge/Selenium-4.15.0-green.svg)](https://www.selenium.dev/)
@@ -78,6 +80,9 @@ This automation framework is designed to test the [NopCommerce Demo Store](https
 | WebDriverManager | 5.6.2 | Automatic Driver Management |
 | Apache POI | 5.2.5 | Excel Data Handling |
 | Commons IO | 2.15.0 | File Operations |
+| Jackson | 2.16.0 | JSON Processing |
+| Snakeyaml | 2.2 | YAML Processing |
+| OpenCSV | 5.9 | CSV Data Handling |
 
 ## 📁 Project Structure
 
