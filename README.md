@@ -153,7 +153,7 @@ Before you begin, ensure you have the following installed:
    - Eclipse
    - Visual Studio Code
 
-## 🚀 Installation & Setup
+## 🚀 Quick Start Guide
 
 ### 1. Clone the Repository
 
@@ -173,15 +173,39 @@ This will:
 - Compile the source code
 - Run all tests (skip with `-DskipTests` if needed)
 
-### 3. Verify Installation
+### 3. Run Your First Test
 
 ```bash
+# Run a single test
 mvn clean test -Dtest=LoginTest
+
+# Run all tests
+mvn clean test
+
+# Run tests with specific browser
+mvn test -Dbrowser=chrome
+
+# Run tests in headless mode
+mvn test -Dheadless=true
+```
+
+### 4. View Test Reports
+
+After test execution, open the HTML report:
+```bash
+# macOS
+open reports/TestReport_*.html
+
+# Windows
+start reports/TestReport_*.html
+
+# Linux
+xdg-open reports/TestReport_*.html
 ```
 
 ## ⚙️ Configuration
 
-### config.properties
+### Application Configuration (config.properties)
 
 Located at: `src/main/resources/config.properties`
 
@@ -191,7 +215,7 @@ app.url=https://demo.nopcommerce.com/
 app.title=nopCommerce demo store
 
 # Browser Configuration
-browser=firefox                    # Options: chrome, firefox, edge
+browser=chrome                     # Options: chrome, firefox, edge, safari
 headless=false                     # Set to true for headless execution
 implicit.wait=10                   # Implicit wait in seconds
 explicit.wait=20                   # Explicit wait in seconds
@@ -199,6 +223,7 @@ page.load.timeout=30               # Page load timeout in seconds
 
 # Execution Configuration
 parallel.execution=true            # Enable parallel test execution
+execution.platform=LOCAL           # Options: LOCAL, LAMBDATEST
 thread.count=3                     # Number of parallel threads
 retry.failed.tests=1               # Number of retry attempts for failed tests
 
@@ -215,20 +240,45 @@ test.email=testuser@example.com
 test.password=Test@123
 ```
 
+### Browser Capabilities Configuration
+
+The framework supports YAML-based dynamic browser capability management for both local and cloud (LambdaTest) execution.
+
+**Configuration Files Location:** `src/main/resources/capabilities/`
+
+**Available Configurations:**
+- `chrome_local.yaml` - Chrome browser for local execution
+- `chrome_lambdatest.yaml` - Chrome browser for LambdaTest cloud
+- `firefox_local.yaml` - Firefox browser for local execution
+- `firefox_lambdatest.yaml` - Firefox browser for LambdaTest cloud
+- `edge_local.yaml` - Edge browser for local execution
+- `edge_lambdatest.yaml` - Edge browser for LambdaTest cloud
+- `safari_local.yaml` - Safari browser for local execution (macOS only)
+- `safari_lambdatest.yaml` - Safari browser for LambdaTest cloud
+
 ### Changing Browser
 
-To run tests on a different browser, update the `browser` property:
-
+**Option 1: Update config.properties**
 ```properties
 browser=chrome    # For Chrome
 browser=firefox   # For Firefox
 browser=edge      # For Edge
 ```
 
-Or pass it as a Maven parameter:
-
+**Option 2: Pass as Maven parameter**
 ```bash
 mvn test -Dbrowser=chrome
+mvn test -Dbrowser=firefox -Dheadless=true
+```
+
+**Option 3: Cloud Execution (LambdaTest)**
+```bash
+# Set environment variables
+export LT_USERNAME="your_username"
+export LT_ACCESS_KEY="your_access_key"
+
+# Run tests
+mvn test -Dbrowser=chrome -Dexecution.platform=LAMBDATEST
 ```
 
 ## 🏃 Running Tests

@@ -1,0 +1,32 @@
+# Safari Browser Configuration for Local Execution
+browser: safari
+platform: LOCAL
+
+# Safari Options
+options:
+  useTechnologyPreview: false
+  automaticInspection: false
+  automaticProfiling: false
+
+# Capabilities
+capabilities:
+  acceptInsecureCerts: true
+  pageLoadStrategy: normal
+  unhandledPromptBehavior: dismiss
+  safari:automaticInspection: false
+  safari:automaticProfiling: false
+
+# Timeouts (in seconds)
+timeouts:
+  implicit: 10
+  pageLoad: 30
+  script: 30
+
+# Window Configuration
+window:
+  maximize: true
+  width: 1920
+  height: 1080
+
+# Headless Mode (Not supported in Safari)
+headless: false

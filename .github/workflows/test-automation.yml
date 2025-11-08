@@ -40,6 +40,11 @@ jobs:
   test:
     name: Run Automated Tests
     runs-on: ${{ matrix.os }}
+
+    env:
+      LT_USERNAME: ${{ secrets.LT_USERNAME }}
+      LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -166,21 +171,15 @@ jobs:
           name: failure-screenshots-${{ matrix.browser }}-${{ matrix.os }}
           path: screenshots/
           retention-days: 30
-      
-      - name: Publish Test Results
-        if: always()
-        uses: dorny/test-reporter@v1
-        with:
-          name: TestNG Results - ${{ matrix.browser }}
-          path: 'target/surefire-reports/TEST-*.xml'
-          reporter: java-junit
-          fail-on-error: false
-        continue-on-error: true
 
   test-on-demand:
     name: Run Tests on ${{ github.event.inputs.os }}
     runs-on: ${{ github.event.inputs.os }}
     if: github.event_name == 'workflow_dispatch'
+
+    env:
+      LT_USERNAME: ${{ secrets.LT_USERNAME }}
+      LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
     
     steps:
       - name: Checkout Repository

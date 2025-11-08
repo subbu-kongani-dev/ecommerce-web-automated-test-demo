@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<!-- 
+    Parallel Execution Suite demonstrating cross-browser testing
+    
+    This suite runs tests in parallel across different browsers using YAML configurations.
+    Each test gets its own thread and WebDriver instance via ThreadLocal pattern.
+    
+    Usage:
+    mvn test -DsuiteXmlFile=capability-demo-parallel-suite.xml -Dexecution.platform=LOCAL
+-->
+
+<suite name="Cross-Browser Parallel Test Suite" parallel="tests" thread-count="3" verbose="1">
+    
+    <test name="Chrome Browser Tests">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.nopcommerce.examples.CapabilityDemoTest">
+                <methods>
+                    <include name="testWithParameterizedBrowser"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Firefox Browser Tests">
+        <parameter name="browser" value="firefox"/>
+        <classes>
+            <class name="com.nopcommerce.examples.CapabilityDemoTest">
+                <methods>
+                    <include name="testWithParameterizedBrowser"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Edge Browser Tests">
+        <parameter name="browser" value="edge"/>
+        <classes>
+            <class name="com.nopcommerce.examples.CapabilityDemoTest">
+                <methods>
+                    <include name="testWithParameterizedBrowser"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+</suite>

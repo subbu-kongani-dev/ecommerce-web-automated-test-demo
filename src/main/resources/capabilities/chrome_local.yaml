@@ -1,0 +1,47 @@
+# Chrome Browser Configuration for Local Execution
+browser: chrome
+platform: LOCAL
+
+# Chrome Options
+options:
+  args:
+    - --start-maximized
+    - --disable-notifications
+    - --disable-popup-blocking
+    - --disable-dev-shm-usage
+    - --no-sandbox
+    - --disable-gpu
+    - --remote-allow-origins=*
+    - --disable-blink-features=AutomationControlled
+  
+  experimentalOptions:
+    excludeSwitches:
+      - enable-automation
+    useAutomationExtension: false
+  
+  prefs:
+    profile.default_content_setting_values.notifications: 2
+    profile.default_content_settings.popups: 0
+    credentials_enable_service: false
+    profile.password_manager_enabled: false
+
+# Capabilities
+capabilities:
+  acceptInsecureCerts: true
+  pageLoadStrategy: normal
+  unhandledPromptBehavior: dismiss
+
+# Timeouts (in seconds)
+timeouts:
+  implicit: 10
+  pageLoad: 30
+  script: 30
+
+# Window Configuration
+window:
+  maximize: true
+  width: 1920
+  height: 1080
+
+# Headless Mode
+headless: false

@@ -1,0 +1,64 @@
+# Firefox Browser Configuration for LambdaTest Execution
+browser: firefox
+platform: LAMBDATEST
+
+# LambdaTest Configuration
+lambdatest:
+  hubUrl: https://hub.lambdatest.com/wd/hub
+  user: ${LT_USERNAME}
+  accessKey: ${LT_ACCESS_KEY}
+
+# LambdaTest Capabilities
+capabilities:
+  browserName: Firefox
+  browserVersion: latest
+  platformName: Windows 10
+  
+  # LambdaTest Specific Options
+  LT:Options:
+    build: NopCommerce Automation Build
+    name: Firefox Test Execution
+    project: NopCommerce E-commerce Testing
+    tags:
+      - firefox
+      - ecommerce
+      - regression
+    
+    # Network and Performance
+    network: true
+    networkLogs: true
+    video: true
+    visual: true
+    console: true
+    
+    # Timezone and Resolution
+    timezone: UTC
+    resolution: 1920x1080
+    
+    # Selenium Configuration
+    selenium_version: 4.15.0
+    driver_version: latest
+    
+    # Test Configuration
+    idleTimeout: 300
+    queueTimeout: 600
+    commandTimeout: 600
+    
+    # Accept certificates
+    acceptInsecureCerts: true
+
+# Firefox Options for LambdaTest
+options:
+  prefs:
+    dom.webnotifications.enabled: false
+    dom.push.enabled: false
+    media.navigator.enabled: false
+
+# Timeouts (in seconds)
+timeouts:
+  implicit: 10
+  pageLoad: 30
+  script: 30
+
+# Headless Mode (Not recommended for LambdaTest)
+headless: false

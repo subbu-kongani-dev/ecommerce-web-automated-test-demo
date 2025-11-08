@@ -1,39 +1,35 @@
 package com.nopcommerce.utils;
 
+import com.nopcommerce.factory.DriverFactory;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.safari.SafariOptions;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.time.Duration;
 
 /**
  * DriverManager handles WebDriver initialization and lifecycle management.
  * Uses ThreadLocal pattern to support parallel test execution.
+ * Enhanced with YAML-based capability management for flexible configuration.
  * 
  * Key Features:
  * - Manages WebDriver instances using ThreadLocal for thread-safety
- * - Supports multiple browsers (Chrome, Firefox, Edge)
- * - Configures browser options (headless mode, notifications, popups)
+ * - Supports multiple browsers (Chrome, Firefox, Edge, Safari)
+ * - YAML-based dynamic capability configuration
+ * - Support for both local and cloud (LambdaTest) execution
+ * - Configures browser options from YAML files
  * - Automatically sets up driver binaries using WebDriverManager
- * - Configures timeouts (implicit, page load) from config properties
- * - Maximizes browser window by default
+ * - Configures timeouts, window settings from YAML configuration
  * 
- * ThreadLocal Pattern:
- * - Each thread gets its own WebDriver instance
- * - Enables parallel test execution without interference
- * - Prevents thread-safety issues in multi-threaded scenarios
+ * Architecture:
+ * - Uses DriverFactory for driver creation (Factory Pattern)
+ * - Capabilities loaded from YAML files (Strategy Pattern)
+ * - ThreadLocal for thread-safety in parallel execution
+ * 
+ * Execution Modes:
+ * - LOCAL: Runs tests on local machine using WebDriverManager
+ * - LAMBDATEST: Runs tests on LambdaTest cloud grid
  * 
  * @author NopCommerce Automation Team
- * @version 1.0
+ * @version 2.0
  */
 public class DriverManager {
     private static final Logger logger = LogManager.getLogger(DriverManager.class);
@@ -62,22 +58,26 @@ public class DriverManager {
     /**
      * Gets or creates a WebDriver instance for the current thread with specified browser.
      * This method implements lazy initialization - creates driver only when needed.
+     * Uses DriverFactory with YAML-based capability configuration.
      * 
-     * @param browserName Name of browser to initialize (chrome, firefox, edge).
+     * @param browserName Name of browser to initialize (chrome, firefox, edge, safari).
      *                    If null or empty, uses browser from config.properties.
      *                    Case-insensitive.
      * @return WebDriver instance for the current thread.
      * @throws IllegalArgumentException if unsupported browser is specified.
      * 
-     * Browser Configuration:
-     * - Chrome: Supports headless mode, disables notifications and popups
-     * - Firefox: Supports headless mode
-     * - Edge: Supports headless mode
+     * Configuration:
+     * - Browser capabilities loaded from YAML files in src/main/resources/capabilities/
+     * - Supports LOCAL and LAMBDATEST execution platforms
+     * - All browser options, timeouts, and window settings configured via YAML
      * 
-     * Timeout Configuration:
-     * - Implicit Wait: Applied to element location
-     * - Page Load Timeout: Maximum time to wait for page load
-     * Both values read from config.properties
+     * YAML Files:
+     * - Local: chrome_local.yaml, firefox_local.yaml, edge_local.yaml, safari_local.yaml
+     * - LambdaTest: chrome_lambdatest.yaml, firefox_lambdatest.yaml, etc.
+     * 
+     * Platform Selection:
+     * - Set via config.properties (execution.platform=LOCAL or LAMBDATEST)
+     * - Or via system property: -Dexecution.platform=LAMBDATEST
      */
     public static WebDriver getDriver(String browserName) {
         if (driver.get() == null) {
@@ -85,73 +85,27 @@ public class DriverManager {
             String browser = (browserName != null && !browserName.isEmpty()) 
                 ? browserName.toLowerCase() 
                 : config.getBrowser().toLowerCase();
-            boolean headless = config.isHeadless();
             
-            logger.info("Initializing " + browser + " browser (Headless: " + headless + ")");
-            
-            switch (browser) {
-                case "chrome":
-                    WebDriverManager.chromedriver().setup();
-                    ChromeOptions chromeOptions = new ChromeOptions();
-                    if (headless) {
-                        chromeOptions.addArguments("--headless=new");
-                        chromeOptions.addArguments("--window-size=1920,1080");
-                    }
-                    chromeOptions.addArguments("--disable-notifications");
-                    chromeOptions.addArguments("--disable-popup-blocking");
-                    chromeOptions.addArguments("--disable-dev-shm-usage");
-                    chromeOptions.addArguments("--no-sandbox");
-                    chromeOptions.addArguments("--disable-gpu");
-                    chromeOptions.addArguments("--remote-allow-origins=*");
-                    chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-                    driver.set(new ChromeDriver(chromeOptions));
-                    break;
-                    
-                case "firefox":
-                    WebDriverManager.firefoxdriver().setup();
-                    FirefoxOptions firefoxOptions = new FirefoxOptions();
-                    if (headless) {
-                        firefoxOptions.addArguments("-headless");
-                    }
-                    firefoxOptions.addArguments("--width=1920");
-                    firefoxOptions.addArguments("--height=1080");
-                    firefoxOptions.addPreference("dom.webnotifications.enabled", false);
-                    firefoxOptions.addPreference("dom.push.enabled", false);
-                    firefoxOptions.addPreference("media.navigator.enabled", false);
-                    firefoxOptions.addPreference("media.peerconnection.enabled", false);
-                    driver.set(new FirefoxDriver(firefoxOptions));
-                    break;
-                    
-                case "edge":
-                    WebDriverManager.edgedriver().setup();
-                    EdgeOptions edgeOptions = new EdgeOptions();
-                    if (headless) {
-                        edgeOptions.addArguments("--headless");
-                    }
-                    driver.set(new EdgeDriver(edgeOptions));
-                    break;
-                 
-                case "safari":
-                	WebDriverManager.safaridriver().setup();
-                	SafariOptions safariOptions = new SafariOptions();
-                	safariOptions.setCapability("safari.cleanSession", true);
-                	safariOptions.setCapability("safari.ignoreFraudWarning", true);
-                	safariOptions.setCapability("safari.allowPopups", false);
-                	safariOptions.setAcceptInsecureCerts(true);
-                	safariOptions.setCapability("safari.enableAutomaticInspection", false);
-                	safariOptions.setCapability("safari.enableRemoteAutomation", true);
-                	driver.set(new SafariDriver(safariOptions));
-                	break;
-                    
-                default:
-                    logger.error("Invalid browser: " + browser);
-                    throw new IllegalArgumentException("Browser not supported: " + browser);
+            // Get execution platform from system property or config
+            String platform = System.getProperty("execution.platform");
+            if (platform == null || platform.isEmpty()) {
+                platform = config.getProperty("execution.platform");
+            }
+            if (platform == null || platform.isEmpty()) {
+                platform = "LOCAL"; // Default to local execution
             }
             
-            driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(config.getImplicitWait()));
-            driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(config.getPageLoadTimeout()));
-            driver.get().manage().window().maximize();
-            logger.info("Browser initialized successfully");
+            logger.info("Initializing {} browser on {} platform", browser, platform);
+            
+            try {
+                // Use DriverFactory to create driver with YAML configuration
+                WebDriver webDriver = DriverFactory.createDriver(browser, platform);
+                driver.set(webDriver);
+                logger.info("Browser initialized successfully using YAML configuration");
+            } catch (Exception e) {
+                logger.error("Failed to initialize browser: " + browser, e);
+                throw new RuntimeException("Failed to create WebDriver instance", e);
+            }
         }
         return driver.get();
     }
