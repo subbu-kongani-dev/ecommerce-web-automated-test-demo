@@ -13,8 +13,8 @@ A comprehensive, scalable, and maintainable web automation testing framework bui
 [![Selenium](https://img.shields.io/badge/Selenium-4.15.0-green.svg)](https://www.selenium.dev/)
 [![TestNG](https://img.shields.io/badge/TestNG-7.8.0-red.svg)](https://testng.org/)
 [![Maven](https://img.shields.io/badge/Maven-Build-blue.svg)](https://maven.apache.org/)
-[![CI/CD](https://github.com/yourusername/ecommerce-web-automated-test-demo/workflows/E-Commerce%20Test%20Automation%20CI/CD/badge.svg)](https://github.com/yourusername/ecommerce-web-automated-test-demo/actions)
-[![Scheduled Tests](https://github.com/yourusername/ecommerce-web-automated-test-demo/workflows/Scheduled%20Smoke%20Tests/badge.svg)](https://github.com/yourusername/ecommerce-web-automated-test-demo/actions)
+[![CI/CD](https://github.com/subbu-kongani-dev/ecommerce-web-automated-test-demo/workflows/E-Commerce%20Test%20Automation%20CI/CD/badge.svg)](https://github.com/subbu-kongani-dev/ecommerce-web-automated-test-demo/actions)
+[![Scheduled Tests](https://github.com/subbu-kongani-dev/ecommerce-web-automated-test-demo/workflows/Scheduled%20Smoke%20Tests/badge.svg)](https://github.com/subbu-kongani-dev/ecommerce-web-automated-test-demo/actions)
 [![Security](https://img.shields.io/badge/Security-Protected-brightgreen.svg)](.github/SECURITY.md)
 [![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-blue.svg)](.github/CONTRIBUTING.md)
 
@@ -158,7 +158,7 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/ecommerce-web-automated-test-demo.git
+git clone https://github.com/subbu-kongani-dev/ecommerce-web-automated-test-demo.git
 cd ecommerce-web-automated-test-demo
 ```
 
@@ -921,9 +921,9 @@ This framework is fully integrated with GitHub Actions for continuous integratio
    - GitHub Actions are automatically enabled for public repositories
    - For private repos, go to Settings → Actions → Enable Actions
 
-3. **Update Badge URLs:**
-   - Replace `yourusername` in README badges with your GitHub username
-   - Replace `ecommerce-web-automated-test-demo` with your repository name
+3. **Verify Badge URLs:**
+   - Badge URLs are already configured for this repository
+   - GitHub Actions status will be reflected automatically
 
 4. **Secrets Configuration (Optional):**
    - Go to Settings → Secrets and variables → Actions
@@ -1133,8 +1133,7 @@ git push origin main
 
 - 📋 [**Security Policy**](.github/SECURITY.md) - Access control details
 - 📝 [**Contributing Guidelines**](.github/CONTRIBUTING.md) - How to contribute
-- 🛡️ [**Branch Protection Guide**](.github/BRANCH_PROTECTION_GUIDE.md) - Setup instructions
-- 👥 [**Code Owners**](.github/CODEOWNERS) - Review requirements
+- 👥 [**Code Owners**](.github/CODEOWNERS.yml) - Review requirements
 
 ### Quick Security Setup
 
@@ -1149,8 +1148,6 @@ git push origin main
    - ✅ Restrict who can push (no exceptions)
    - ✅ Do not allow force pushes
    - ✅ Do not allow deletions
-
-**Full setup guide:** [Branch Protection Guide](.github/BRANCH_PROTECTION_GUIDE.md)
 
 ## 🤝 Contributing
 
@@ -1255,8 +1252,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Subramanyam Kongani**
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
+- GitHub: [@subbu-kongani-dev](https://github.com/subbu-kongani-dev)
+- LinkedIn: [LinkedIn Profile](https://linkedin.com/in/subramanyam-kongani)
 
 ## 🙏 Acknowledgments
 
@@ -1268,8 +1265,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 For questions or issues:
-- Open an issue on GitHub
-- Email: your.email@example.com
+- Open an issue on [GitHub Issues](https://github.com/subbu-kongani-dev/ecommerce-web-automated-test-demo/issues)
 
 ---
 
