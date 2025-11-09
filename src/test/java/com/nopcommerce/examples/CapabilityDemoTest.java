@@ -1,6 +1,6 @@
 package com.nopcommerce.examples;
 
-import com.nopcommerce.utils.DriverManager;
+import com.nopcommerce.core.driver.DriverManager;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;

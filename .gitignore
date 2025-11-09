@@ -146,3 +146,5 @@ selenium-server-*.jar
 chromedriver
 geckodriver
 msedgedriver
+/.apt_generated/
+/.apt_generated_tests/

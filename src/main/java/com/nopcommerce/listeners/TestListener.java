@@ -6,7 +6,7 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
-import com.nopcommerce.utils.DriverManager;
+import com.nopcommerce.core.driver.DriverManager;
 import com.nopcommerce.utils.ScreenshotUtil;
 
 /**

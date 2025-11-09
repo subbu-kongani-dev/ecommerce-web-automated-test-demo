@@ -13,83 +13,164 @@
     <description>Scalable and Maintainable Web Automation Framework using Selenium, TestNG, and Page Object Model</description>
 
     <properties>
+        <!-- Build Configuration -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <selenium.version>4.15.0</selenium.version>
-        <testng.version>7.8.0</testng.version>
-        <log4j.version>2.21.1</log4j.version>
-        <extentreports.version>5.1.1</extentreports.version>
-        <webdrivermanager.version>5.6.2</webdrivermanager.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        
+        <!-- Core Dependencies -->
+        <selenium.version>4.16.1</selenium.version>
+        <testng.version>7.9.0</testng.version>
+        <junit.version>5.10.1</junit.version>
+        <webdrivermanager.version>5.6.3</webdrivermanager.version>
+        
+        <!-- Logging -->
+        <log4j.version>2.22.1</log4j.version>
+        <slf4j.version>2.0.11</slf4j.version>
+        
+        <!-- Reporting -->
+        <extentreports.version>5.1.2</extentreports.version>
+        
+        <!-- Utilities -->
+        <lombok.version>1.18.30</lombok.version>
+        <jackson.version>2.16.1</jackson.version>
+        <commons-io.version>2.15.1</commons-io.version>
+        <poi.version>5.2.5</poi.version>
+        <opencsv.version>5.9</opencsv.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
+        
+        <!-- Plugin Versions -->
+        <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.2.3</maven-surefire-plugin.version>
     </properties>
 
     <dependencies>
+        <!-- ==================== Core Testing Dependencies ==================== -->
+        
+        <!-- Selenium WebDriver -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
-        </dependency>
+
+        <!-- WebDriverManager (automatic driver management) -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>${webdrivermanager.version}</version>
         </dependency>
+
+        <!-- TestNG (integration and E2E tests) -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+
+        <!-- JUnit 5 (unit tests) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ==================== Logging Dependencies ==================== -->
+        
+        <!-- SLF4J API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- Log4j2 Core -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+
+        <!-- Log4j2 API -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+
+        <!-- SLF4J to Log4j2 Bridge (CRITICAL: This was missing!) -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <!-- Log4j2 JUL Bridge (for Selenium logging) -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-jul</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+
+        <!-- ==================== Reporting Dependencies ==================== -->
+        
+        <!-- ExtentReports -->
         <dependency>
             <groupId>com.aventstack</groupId>
             <artifactId>extentreports</artifactId>
             <version>${extentreports.version}</version>
         </dependency>
+
+        <!-- ==================== Utility Dependencies ==================== -->
+        
+        <!-- Lombok (reduce boilerplate code) -->
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.15.0</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>5.2.5</version>
-        </dependency>
-        <!-- Jackson for JSON parsing -->
+
+        <!-- Jackson (JSON parsing) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.16.0</version>
+            <version>${jackson.version}</version>
         </dependency>
-        <!-- OpenCSV for CSV parsing -->
+
+        <!-- Commons IO (file operations) -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
+        <!-- Apache POI (Excel operations) -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+
+        <!-- OpenCSV (CSV parsing) -->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>5.9</version>
+            <version>${opencsv.version}</version>
         </dependency>
-        <!-- SnakeYAML for YAML parsing -->
+
+        <!-- SnakeYAML (YAML parsing) -->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>2.2</version>
+            <version>${snakeyaml.version}</version>
         </dependency>
     </dependencies>
 
     <profiles>
+        <!-- ==================== OS-Specific Profiles ==================== -->
+        
         <!-- Linux Profile -->
         <profile>
             <id>linux</id>
@@ -140,34 +221,100 @@
             </activation>
             <properties>
                 <headless>true</headless>
+                <skipTests>false</skipTests>
+            </properties>
+        </profile>
+
+        <!-- Development Profile (with debug logging) -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <log.level>DEBUG</log.level>
             </properties>
         </profile>
     </profiles>
 
     <build>
         <plugins>
+            <!-- ==================== Compiler Plugin ==================== -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>17</source>
+                    <target>17</target>
+                    <encoding>UTF-8</encoding>
+                    <!-- CRITICAL: Annotation processor for Lombok -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
+            <!-- ==================== Surefire Plugin (Test Execution) ==================== -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>${maven-surefire-plugin.version}</version>
+                <dependencies>
+                    <!-- Force TestNG provider -->
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-testng</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
+                    <!-- TestNG Suite -->
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    
+                    <!-- System Properties -->
                     <systemPropertyVariables>
-                        <java.util.logging.config.file>src/main/resources/logging.properties</java.util.logging.config.file>
+                        <java.util.logging.config.file>
+                            src/main/resources/logging.properties
+                        </java.util.logging.config.file>
                     </systemPropertyVariables>
-                    <argLine>-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager</argLine>
+                    
+                    <!-- JVM Arguments -->
+                    <argLine>
+                        -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+                        -Dfile.encoding=UTF-8
+                    </argLine>
+                    
+                    <!-- Parallel Execution -->
+                    <parallel>methods</parallel>
+                    <threadCount>3</threadCount>
+                    <useUnlimitedThreads>false</useUnlimitedThreads>
+                    
+                    <!-- Test Failure Handling -->
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <forkCount>1</forkCount>
+                    <reuseForks>true</reuseForks>
                 </configuration>
+            </plugin>
+
+            <!-- ==================== Maven Resources Plugin ==================== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- ==================== Maven Clean Plugin ==================== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.3.2</version>
             </plugin>
         </plugins>
     </build>
