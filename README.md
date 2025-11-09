@@ -108,20 +108,34 @@ ecommerce-web-automated-test-demo/
 │   │   │   │   ├── NavigationMenu.java              # Dynamic navigation menu
 │   │   │   │   ├── SearchResultsPage.java           # Search results page
 │   │   │   │   └── ShoppingCartPage.java            # Shopping cart page
-│   │   │   ├── factory/
-│   │   │   │   └── DriverFactory.java               # WebDriver factory for browser creation
+│   │   │   ├── core/
+│   │   │   │   ├── driver/
+│   │   │   │   │   ├── DriverFactory.java           # WebDriver factory for browser creation
+│   │   │   │   │   ├── DriverManager.java           # WebDriver lifecycle management
+│   │   │   │   │   └── DriverType.java              # Enum for driver types
+│   │   │   │   ├── config/
+│   │   │   │   │   └── ConfigurationManager.java    # Centralized configuration management
+│   │   │   │   └── capabilities/
+│   │   │   │       ├── CapabilityBuilder.java       # Interface for capability builders
+│   │   │   │       ├── CapabilityLoader.java        # YAML capability loader
+│   │   │   │       ├── ChromeCapabilityBuilder.java # Chrome-specific capabilities
+│   │   │   │       ├── FirefoxCapabilityBuilder.java # Firefox-specific capabilities
+│   │   │   │       ├── EdgeCapabilityBuilder.java   # Edge-specific capabilities
+│   │   │   │       ├── SafariCapabilityBuilder.java # Safari-specific capabilities
+│   │   │   │       ├── LocalCapabilityBuilder.java  # Local execution capabilities
+│   │   │   │       └── RemoteCapabilityBuilder.java # Remote/cloud execution capabilities
 │   │   │   ├── models/
-│   │   │   │   └── BrowserCapability.java           # Browser capability POJO
+│   │   │   │   └── BrowserConfig.java               # Browser configuration POJO
 │   │   │   ├── utils/
-│   │   │   │   ├── ConfigReader.java                # Configuration reader
-│   │   │   │   ├── DriverManager.java               # WebDriver lifecycle management
-│   │   │   │   ├── CapabilityReader.java            # YAML capability reader
 │   │   │   │   ├── WebElementActions.java           # Centralized element interactions
 │   │   │   │   ├── WaitUtil.java                    # Explicit wait utilities
 │   │   │   │   └── ScreenshotUtil.java              # Screenshot utilities
-│   │   │   └── listeners/
-│   │   │       ├── TestListener.java                # TestNG listener for events
-│   │   │       └── ExtentReportManager.java         # Extent report management
+│   │   │   ├── listeners/
+│   │   │   │   ├── TestListener.java                # TestNG listener for events
+│   │   │   │   └── ExtentReportManager.java         # Extent report management
+│   │   │   └── exceptions/
+│   │   │       ├── ConfigurationException.java      # Configuration-related exceptions
+│   │   │       └── DriverException.java             # WebDriver-related exceptions
 │   │   │
 │   │   └── resources/
 │   │       ├── config.properties                    # Main configuration file
@@ -177,6 +191,10 @@ ecommerce-web-automated-test-demo/
 │   │   ├── test-automation.yml                      # Main CI/CD pipeline
 │   │   ├── scheduled-tests.yml                      # Scheduled smoke tests
 │   │   └── dependency-check.yml                     # Dependency management
+│   ├── ISSUE_TEMPLATE/                              # GitHub issue templates
+│   │   ├── bug_report.md                            # Bug report template
+│   │   └── feature_request.md                       # Feature request template
+│   ├── PULL_REQUEST_TEMPLATE.md                     # Pull request template
 │   ├── SECURITY.md                                  # Security policy
 │   ├── CONTRIBUTING.md                              # Contributing guidelines
 │   └── CODEOWNERS.yml                               # Code ownership
@@ -188,6 +206,7 @@ ecommerce-web-automated-test-demo/
 ├── test-output/                                     # TestNG output (auto-generated)
 │
 ├── .gitignore                                       # Git ignore rules
+├── lombok.config                                    # Lombok configuration
 ├── pom.xml                                          # Maven configuration
 ├── LICENSE                                          # MIT License
 └── README.md                                        # Project documentation
