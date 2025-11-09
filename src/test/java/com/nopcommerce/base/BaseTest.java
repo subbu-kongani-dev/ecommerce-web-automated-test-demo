@@ -11,8 +11,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 import com.nopcommerce.listeners.TestListener;
-import com.nopcommerce.utils.ConfigReader;
-import com.nopcommerce.utils.DriverManager;
+import com.nopcommerce.core.config.ConfigurationManager;
+import com.nopcommerce.core.driver.DriverManager;
 import com.nopcommerce.utils.ScreenshotUtil;
 
 /**
@@ -25,12 +25,12 @@ import com.nopcommerce.utils.ScreenshotUtil;
  * capabilities - Integrates with TestListener for enhanced reporting
  * 
  * @author NopCommerce Automation Team
- * @version 1.0
+ * @version 2.0
  */
 @Listeners(TestListener.class)
 public class BaseTest {
 	protected WebDriver driver;
-	protected ConfigReader config;
+	protected ConfigurationManager config;
 	protected static final Logger logger = LogManager.getLogger(BaseTest.class);
 
 	/**
@@ -48,7 +48,7 @@ public class BaseTest {
 		// Add visual separation before test setup
 		System.out.println("\n**********************************************************************\n");
 		logger.info("=== Test Setup Started ===");
-		config = ConfigReader.getInstance();
+		config = ConfigurationManager.getInstance();
 		driver = DriverManager.getDriver(browser);
 		logger.info("WebDriver initialized successfully");
 		String appUrl = config.getAppUrl();
@@ -115,14 +115,14 @@ public class BaseTest {
 	 */
 	private String getTestStatusText(int status) {
 		switch (status) {
-		case ITestResult.SUCCESS:
-			return "SUCCESS";
-		case ITestResult.FAILURE:
-			return "FAILURE";
-		case ITestResult.SKIP:
-			return "SKIP";
-		default:
-			return "UNKNOWN";
+			case ITestResult.SUCCESS:
+				return "SUCCESS";
+			case ITestResult.FAILURE:
+				return "FAILURE";
+			case ITestResult.SKIP:
+				return "SKIP";
+			default:
+				return "UNKNOWN";
 		}
 	}
 }
