@@ -21,7 +21,6 @@
         <!-- Core Dependencies -->
         <selenium.version>4.16.1</selenium.version>
         <testng.version>7.9.0</testng.version>
-        <junit.version>5.10.1</junit.version>
         <webdrivermanager.version>5.6.3</webdrivermanager.version>
         
         <!-- Logging -->
@@ -66,14 +65,6 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
-        </dependency>
-
-        <!-- JUnit 5 (unit tests) -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- ==================== Logging Dependencies ==================== -->

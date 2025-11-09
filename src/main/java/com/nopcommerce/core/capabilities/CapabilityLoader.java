@@ -79,14 +79,18 @@ public class CapabilityLoader {
 			}
 		}
 
-		// Map timeouts
+		// Map timeouts (with default)
 		if (data.containsKey("timeouts")) {
 			builder.timeouts(mapTimeouts((Map<String, Object>) data.get("timeouts")));
+		} else {
+			builder.timeouts(BrowserConfig.TimeoutConfig.builder().build());
 		}
 
-		// Map window
+		// Map window (with default)
 		if (data.containsKey("window")) {
 			builder.window(mapWindow((Map<String, Object>) data.get("window")));
+		} else {
+			builder.window(BrowserConfig.WindowConfig.builder().build());
 		}
 
 		// Map remote config
