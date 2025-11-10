@@ -13,6 +13,8 @@ options:
     - --disable-gpu
     - --remote-allow-origins=*
     - --disable-blink-features=AutomationControlled
+    - --disable-extensions
+    - --disable-setuid-sandbox
   
   experimentalOptions:
     excludeSwitches:

@@ -82,7 +82,7 @@ jobs:
         run: mvn clean compile
       
       - name: Run Tests
-        run: mvn test -Dbrowser=${{ matrix.browser }} -Dheadless=true
+        run: mvn test -Dsurefire.suiteXmlFiles=src/test/resources/testng-ci.xml -Dbrowser=${{ matrix.browser }} -Dheadless=true -Dexecution.platform=Local
         continue-on-error: true
       
       - name: Generate Test Report Summary

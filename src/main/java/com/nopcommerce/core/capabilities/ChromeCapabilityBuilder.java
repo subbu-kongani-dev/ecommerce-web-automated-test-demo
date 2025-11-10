@@ -50,13 +50,16 @@ public class ChromeCapabilityBuilder implements CapabilityBuilder {
 
 		ChromeOptions options = new ChromeOptions();
 
-		// Apply headless mode
+		// Apply headless mode with proper configuration for CI/CD environments
 		if (config.isHeadless()) {
-			options.addArguments("--headless=new");
+			options.addArguments("--headless=new");  // Modern headless mode (Chrome 109+)
+			options.addArguments("--disable-gpu");
+			options.addArguments("--no-sandbox");
+			options.addArguments("--disable-dev-shm-usage");
 			options.addArguments(String.format("--window-size=%d,%d",
 					config.getWindow().getWidth(),
 					config.getWindow().getHeight()));
-			log.debug("Headless mode enabled with window size: {}x{}",
+			log.info("✅ Headless mode enabled with window size: {}x{}", 
 					config.getWindow().getWidth(),
 					config.getWindow().getHeight());
 		}

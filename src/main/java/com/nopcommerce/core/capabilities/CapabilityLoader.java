@@ -42,7 +42,23 @@ public class CapabilityLoader {
 			}
 
 			Map<String, Object> yamlData = yaml.load(is);
-			return mapToConfig(yamlData);
+			
+			// Validate YAML data is not null or empty
+			if (yamlData == null || yamlData.isEmpty()) {
+				throw new ConfigurationException("YAML file is empty or invalid: " + fileName);
+			}
+			
+			BrowserConfig browserConfig = mapToConfig(yamlData);
+			
+			// Override headless mode from system property if present
+			String headlessOverride = System.getProperty("headless");
+			if (headlessOverride != null) {
+				boolean isHeadless = Boolean.parseBoolean(headlessOverride);
+				log.info("Overriding headless mode from system property: {}", isHeadless);
+				return browserConfig.toBuilder().headless(isHeadless).build();
+			}
+			
+			return browserConfig;
 
 		} catch (Exception e) {
 			throw new ConfigurationException("Failed to load capabilities: " + fileName, e);
@@ -51,9 +67,14 @@ public class CapabilityLoader {
 
 	@SuppressWarnings("unchecked")
 	private BrowserConfig mapToConfig(Map<String, Object> data) {
+		// Validate required fields
+		if (!data.containsKey("browser") || data.get("browser") == null) {
+			throw new ConfigurationException("Missing required field 'browser' in YAML configuration");
+		}
+		
 		BrowserConfig.BrowserConfigBuilder builder = BrowserConfig.builder()
 				.browser((String) data.get("browser"))
-				.platform((String) data.get("platform"))
+				.platform((String) data.getOrDefault("platform", "LOCAL"))
 				.headless((Boolean) data.getOrDefault("headless", false));
 
 		// Map capabilities

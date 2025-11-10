@@ -57,10 +57,14 @@ public class FirefoxCapabilityBuilder implements CapabilityBuilder {
 
 		FirefoxOptions options = new FirefoxOptions();
 
-		// Apply headless mode
+		// Apply headless mode with proper configuration for CI/CD environments
 		if (config.isHeadless()) {
 			options.addArguments("-headless");
-			log.debug("Headless mode enabled");
+			options.addArguments("--width=" + config.getWindow().getWidth());
+			options.addArguments("--height=" + config.getWindow().getHeight());
+			log.info("✅ Headless mode enabled with window size: {}x{}", 
+					config.getWindow().getWidth(),
+					config.getWindow().getHeight());
 		}
 
 		// Apply arguments

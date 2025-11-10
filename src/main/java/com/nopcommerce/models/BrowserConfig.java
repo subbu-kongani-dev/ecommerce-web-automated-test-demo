@@ -54,6 +54,23 @@ public class BrowserConfig {
 	public static BrowserConfigBuilder builder() {
 		return new BrowserConfigBuilder();
 	}
+	
+	/**
+	 * Creates a builder initialized with this config's values.
+	 * Useful for creating modified copies.
+	 */
+	public BrowserConfigBuilder toBuilder() {
+		return new BrowserConfigBuilder()
+				.browser(this.browser)
+				.platform(this.platform)
+				.headless(this.headless)
+				.capabilities(this.capabilities)
+				.arguments(this.arguments)
+				.preferences(this.preferences)
+				.timeouts(this.timeouts)
+				.window(this.window)
+				.remoteConfig(this.remoteConfig);
+	}
 
 	public static class BrowserConfigBuilder {
 		private String browser;
