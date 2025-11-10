@@ -123,6 +123,24 @@ jobs:
         run: mvn test -Dsurefire.suiteXmlFiles=src/test/resources/testng-ci.xml -Dbrowser=${{ matrix.browser }} -Dheadless=true -Dexecution.platform=Local
         continue-on-error: true
       
+      - name: List Generated Artifacts
+        if: always()
+        run: |
+          echo "=== Checking Generated Test Artifacts ==="
+          echo "Current directory: $(pwd)"
+          echo ""
+          echo "Screenshots directory:"
+          ls -lah screenshots/ || echo "No screenshots directory"
+          echo ""
+          echo "Reports directory:"
+          ls -lah reports/ || echo "No reports directory"
+          echo ""
+          echo "Logs directory:"
+          ls -lah logs/ || echo "No logs directory"
+          echo ""
+          echo "Surefire reports:"
+          ls -lah target/surefire-reports/ || echo "No surefire reports"
+      
       - name: Generate Test Report Summary
         if: always()
         run: |
@@ -131,21 +149,28 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           
           if [ -d "reports" ]; then
-            echo "✅ **Test Reports:** $(ls -1 reports/ | wc -l) file(s)" >> $GITHUB_STEP_SUMMARY
+            REPORT_COUNT=$(ls -1 reports/ 2>/dev/null | wc -l)
+            echo "✅ **Test Reports:** $REPORT_COUNT file(s)" >> $GITHUB_STEP_SUMMARY
             ls -la reports/
           else
             echo "⚠️ **Test Reports:** Not found" >> $GITHUB_STEP_SUMMARY
           fi
           
           if [ -d "screenshots" ]; then
-            echo "📸 **Screenshots:** $(ls -1 screenshots/ | wc -l) file(s)" >> $GITHUB_STEP_SUMMARY
+            SCREENSHOT_COUNT=$(ls -1 screenshots/ 2>/dev/null | wc -l)
+            echo "📸 **Screenshots:** $SCREENSHOT_COUNT file(s)" >> $GITHUB_STEP_SUMMARY
+            if [ $SCREENSHOT_COUNT -gt 0 ]; then
+              echo "### Screenshot Files:" >> $GITHUB_STEP_SUMMARY
+              ls -1 screenshots/ | head -20 >> $GITHUB_STEP_SUMMARY
+            fi
             ls -la screenshots/
           else
             echo "⚠️ **Screenshots:** Not found" >> $GITHUB_STEP_SUMMARY
           fi
           
           if [ -d "logs" ]; then
-            echo "📋 **Log Files:** $(ls -1 logs/ | wc -l) file(s)" >> $GITHUB_STEP_SUMMARY
+            LOG_COUNT=$(ls -1 logs/ 2>/dev/null | wc -l)
+            echo "📋 **Log Files:** $LOG_COUNT file(s)" >> $GITHUB_STEP_SUMMARY
             ls -la logs/
           else
             echo "⚠️ **Log Files:** Not found" >> $GITHUB_STEP_SUMMARY
@@ -154,6 +179,9 @@ jobs:
           if [ -d "test-output" ]; then
             echo "📊 **TestNG Output:** Available" >> $GITHUB_STEP_SUMMARY
           fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note:** Download artifacts from the 'Artifacts' section at the bottom of this workflow run." >> $GITHUB_STEP_SUMMARY
       
       - name: Upload Screenshots
         if: always()

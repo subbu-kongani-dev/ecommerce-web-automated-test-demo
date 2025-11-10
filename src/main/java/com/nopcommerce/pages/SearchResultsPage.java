@@ -1,5 +1,7 @@
 package com.nopcommerce.pages;
 
+import static com.nopcommerce.utils.WaitUtil.*;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -23,33 +25,50 @@ public class SearchResultsPage extends BasePage {
     private WebElement searchPageHeader;
     
     public int getSearchResultsCount() {
-        try {
-            Thread.sleep(2000); // Wait for search results to load
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        // Wait for search results to load with proper explicit wait
+        waitForPageLoad(driver);
+        waitForDomStability(driver);
+        
+        // Additional wait in CI/CD environments
+        boolean isCI = System.getenv("CI") != null || System.getenv("GITHUB_ACTIONS") != null;
+        shortPause(isCI ? 2000 : 1000);
+        
         int count = searchResults.size();
         logger.info("Search results count: " + count);
         return count;
     }
     
     public boolean areSearchResultsDisplayed() {
+        // Wait for search results to load
+        waitForPageLoad(driver);
+        waitForDomStability(driver);
+        
+        // Additional wait in CI/CD environments
+        boolean isCI = System.getenv("CI") != null || System.getenv("GITHUB_ACTIONS") != null;
+        shortPause(isCI ? 2000 : 1000);
+        
+        boolean hasResults = searchResults.size() > 0;
+        logger.info("Search results displayed: " + hasResults);
+        return hasResults;
+    }
+    
+    public boolean isNoResultMessageDisplayed() {
         try {
-            Thread.sleep(2000); // Wait for search results to load
-            boolean hasResults = searchResults.size() > 0;
-            logger.info("Search results displayed: " + hasResults);
-            return hasResults;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            waitForElementToBeVisible(driver, noResultMessage);
+            return WebElementActions.isDisplayed(driver, noResultMessage, "No result message");
+        } catch (Exception e) {
+            logger.debug("No result message not displayed");
             return false;
         }
     }
     
-    public boolean isNoResultMessageDisplayed() {
-        return WebElementActions.isDisplayed(driver, noResultMessage, "No result message");
-    }
-    
     public boolean isSearchPageHeaderDisplayed() {
-        return WebElementActions.isDisplayed(driver, searchPageHeader, "Search page header");
+        try {
+            waitForElementToBeVisible(driver, searchPageHeader);
+            return WebElementActions.isDisplayed(driver, searchPageHeader, "Search page header");
+        } catch (Exception e) {
+            logger.warn("Search page header not displayed", e);
+            return false;
+        }
     }
 }

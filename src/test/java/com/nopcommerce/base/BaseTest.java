@@ -1,5 +1,7 @@
 package com.nopcommerce.base;
 
+import static com.nopcommerce.utils.WaitUtil.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -59,11 +61,20 @@ public class BaseTest {
 			driver.get(appUrl);
 			logger.info("Navigated to application URL: " + appUrl);
 			
-			// Wait for page to be fully loaded and stable (especially important in CI/CD)
-			com.nopcommerce.utils.WaitUtil.waitForPageLoad(driver);
-			com.nopcommerce.utils.WaitUtil.shortPause(1000); // Brief pause for rendering
+			// Enhanced page stability checks for CI/CD environments
+			waitForPageLoad(driver);
+			waitForDomStability(driver);
 			
-			logger.info("=== Test Setup Completed ===");
+			// Additional wait in CI/CD for complete rendering
+			boolean isCI = System.getenv("CI") != null || System.getenv("GITHUB_ACTIONS") != null;
+			if (isCI) {
+				logger.info("CI/CD environment detected - applying extended stability wait");
+				shortPause(2000);
+			} else {
+				shortPause(1000);
+			}
+			
+			logger.info("=== Test Setup Completed (CI mode: {}) ===", isCI);
 			logger.info("");
 		} catch (Exception e) {
 			logger.error("Test setup failed", e);

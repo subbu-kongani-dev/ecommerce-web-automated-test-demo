@@ -1,5 +1,8 @@
 package com.nopcommerce.pages;
 
+import static com.nopcommerce.utils.WaitUtil.*;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -36,14 +39,30 @@ public class HomePage extends BasePage {
 
 	@FindBy(xpath = "//div[@class='header-logo']//a")
 	private WebElement logo;
+	
+	// By locators for stale-element-safe operations
+	private static final By REGISTER_LINK = By.linkText("Register");
+	private static final By LOGIN_LINK = By.linkText("Log in");
+	private static final By SEARCH_BOX = By.id("small-searchterms");
+	private static final By SEARCH_BUTTON = By.xpath("//button[@type='submit' and text()='Search']");
 
 	public RegisterPage clickRegisterLink() {
-		WebElementActions.click(driver, registerLink, "Register link");
+		// RECOMMENDED: Use By locator to avoid StaleElementReferenceException
+		WebElement element = waitForClickableElement(driver, REGISTER_LINK);
+		shortPause(300); // Stability pause
+		element.click();
+		logger.info("Clicked on Register link");
+		waitForPageLoad(driver);
 		return new RegisterPage(driver);
 	}
 
 	public LoginPage clickLoginLink() {
-		WebElementActions.click(driver, loginLink, "Login link");
+		// RECOMMENDED: Use By locator to avoid StaleElementReferenceException
+		WebElement element = waitForClickableElement(driver, LOGIN_LINK);
+		shortPause(300); // Stability pause
+		element.click();
+		logger.info("Clicked on Login link");
+		waitForPageLoad(driver);
 		return new LoginPage(driver);
 	}
 
@@ -60,8 +79,18 @@ public class HomePage extends BasePage {
 	}
 
 	public SearchResultsPage searchProduct(String searchTerm) {
-		WebElementActions.type(driver, searchBox, searchTerm, "Search box");
-		WebElementActions.click(driver, searchButton, "Search button");
+		// Use By locators for stale-element-safe operations
+		WebElement searchBoxElement = waitForVisibleElement(driver, SEARCH_BOX);
+		searchBoxElement.clear();
+		searchBoxElement.sendKeys(searchTerm);
+		logger.info("Entered search term: " + searchTerm);
+		
+		WebElement searchButtonElement = waitForClickableElement(driver, SEARCH_BUTTON);
+		shortPause(300); // Stability pause
+		searchButtonElement.click();
+		logger.info("Clicked on Search button");
+		
+		waitForPageLoad(driver);
 		return new SearchResultsPage(driver);
 	}
 
