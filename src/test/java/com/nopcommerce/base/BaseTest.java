@@ -36,6 +36,7 @@ public class BaseTest {
 	/**
 	 * Setup method that runs before each test method. Initializes WebDriver, loads
 	 * configuration, and navigates to the application URL.
+	 * Enhanced with page load stability checks for CI/CD environments.
 	 * 
 	 * @param browser Optional parameter to specify browser type (chrome, firefox,
 	 *                edge). If not provided, uses the browser specified in
@@ -48,14 +49,26 @@ public class BaseTest {
 		// Add visual separation before test setup
 		System.out.println("\n**********************************************************************\n");
 		logger.info("=== Test Setup Started ===");
-		config = ConfigurationManager.getInstance();
-		driver = DriverManager.getDriver(browser);
-		logger.info("WebDriver initialized successfully");
-		String appUrl = config.getAppUrl();
-		driver.get(appUrl);
-		logger.info("Navigated to application URL: " + appUrl);
-		logger.info("=== Test Setup Completed ===");
-		logger.info("");
+		
+		try {
+			config = ConfigurationManager.getInstance();
+			driver = DriverManager.getDriver(browser);
+			logger.info("WebDriver initialized successfully");
+			
+			String appUrl = config.getAppUrl();
+			driver.get(appUrl);
+			logger.info("Navigated to application URL: " + appUrl);
+			
+			// Wait for page to be fully loaded and stable (especially important in CI/CD)
+			com.nopcommerce.utils.WaitUtil.waitForPageLoad(driver);
+			com.nopcommerce.utils.WaitUtil.shortPause(1000); // Brief pause for rendering
+			
+			logger.info("=== Test Setup Completed ===");
+			logger.info("");
+		} catch (Exception e) {
+			logger.error("Test setup failed", e);
+			throw new RuntimeException("Failed to setup test environment", e);
+		}
 	}
 
 	/**

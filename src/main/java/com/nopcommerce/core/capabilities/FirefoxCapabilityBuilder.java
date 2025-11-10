@@ -62,7 +62,23 @@ public class FirefoxCapabilityBuilder implements CapabilityBuilder {
 			options.addArguments("-headless");
 			options.addArguments("--width=" + config.getWindow().getWidth());
 			options.addArguments("--height=" + config.getWindow().getHeight());
-			log.info("✅ Headless mode enabled with window size: {}x{}", 
+			
+			// Additional Firefox headless stability preferences
+			options.addPreference("browser.startup.homepage", "about:blank");
+			options.addPreference("startup.homepage_welcome_url", "about:blank");
+			options.addPreference("startup.homepage_welcome_url.additional", "");
+			options.addPreference("browser.tabs.remote.autostart", false);
+			options.addPreference("browser.tabs.remote.autostart.2", false);
+			options.addPreference("browser.sessionstore.resume_from_crash", false);
+			options.addPreference("browser.cache.disk.enable", false);
+			options.addPreference("browser.cache.memory.enable", true);
+			options.addPreference("browser.cache.offline.enable", false);
+			options.addPreference("network.http.use-cache", false);
+			
+			// Set page load strategy to eager for faster test execution
+			options.setPageLoadStrategy(org.openqa.selenium.PageLoadStrategy.EAGER);
+			
+			log.info("✅ Headless mode enabled with enhanced CI/CD stability options. Window size: {}x{}", 
 					config.getWindow().getWidth(),
 					config.getWindow().getHeight());
 		}

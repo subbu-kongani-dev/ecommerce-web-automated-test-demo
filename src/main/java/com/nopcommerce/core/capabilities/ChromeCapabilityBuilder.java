@@ -56,10 +56,27 @@ public class ChromeCapabilityBuilder implements CapabilityBuilder {
 			options.addArguments("--disable-gpu");
 			options.addArguments("--no-sandbox");
 			options.addArguments("--disable-dev-shm-usage");
+			options.addArguments("--disable-software-rasterizer");
+			options.addArguments("--disable-extensions");
+			options.addArguments("--disable-logging");
+			options.addArguments("--disable-in-process-stack-traces");
+			options.addArguments("--log-level=3");
+			options.addArguments("--remote-debugging-port=9222");
+			options.addArguments("--disable-background-timer-throttling");
+			options.addArguments("--disable-backgrounding-occluded-windows");
+			options.addArguments("--disable-renderer-backgrounding");
+			options.addArguments("--disable-features=TranslateUI");
+			options.addArguments("--disable-ipc-flooding-protection");
+			options.addArguments("--metrics-recording-only");
+			options.addArguments("--mute-audio");
 			options.addArguments(String.format("--window-size=%d,%d",
 					config.getWindow().getWidth(),
 					config.getWindow().getHeight()));
-			log.info("✅ Headless mode enabled with window size: {}x{}", 
+			
+			// Set page load strategy to eager for faster test execution in headless mode
+			options.setPageLoadStrategy(org.openqa.selenium.PageLoadStrategy.EAGER);
+			
+			log.info("✅ Headless mode enabled with enhanced CI/CD stability options. Window size: {}x{}", 
 					config.getWindow().getWidth(),
 					config.getWindow().getHeight());
 		}

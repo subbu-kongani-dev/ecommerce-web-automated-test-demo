@@ -241,6 +241,7 @@ public class DriverFactory {
 	/**
 	 * Sets up driver binary using WebDriverManager.
 	 * Automatically downloads and configures the correct driver version.
+	 * Enhanced for CI/CD environments with proper caching and version detection.
 	 * 
 	 * @param browser Browser name
 	 */
@@ -249,19 +250,37 @@ public class DriverFactory {
 
 		try {
 			switch (browser.toLowerCase()) {
-				case "chrome" -> WebDriverManager.chromedriver().setup();
-				case "firefox" -> WebDriverManager.firefoxdriver().setup();
-				case "edge", "msedge" -> WebDriverManager.edgedriver().setup();
+				case "chrome" -> {
+					WebDriverManager.chromedriver()
+						.clearDriverCache()
+						.clearResolutionCache()
+						.setup();
+					log.info("Chrome driver setup completed");
+				}
+				case "firefox" -> {
+					WebDriverManager.firefoxdriver()
+						.clearDriverCache()
+						.clearResolutionCache()
+						.setup();
+					log.info("Firefox driver setup completed");
+				}
+				case "edge", "msedge" -> {
+					WebDriverManager.edgedriver()
+						.clearDriverCache()
+						.clearResolutionCache()
+						.setup();
+					log.info("Edge driver setup completed");
+				}
 				case "safari" -> {
 					// Safari driver comes with macOS, no setup needed
 					log.debug("Safari driver is built into macOS, no setup required");
 				}
 				default -> log.warn("Unknown browser for WebDriverManager: {}", browser);
 			}
-			log.debug("Driver binary setup completed for {}", browser);
 		} catch (Exception e) {
-			log.warn("WebDriverManager setup failed for {}: {}. Assuming driver is in PATH.",
-					browser, e.getMessage());
+			log.error("WebDriverManager setup failed for {}: {}. This may cause driver initialization to fail.",
+					browser, e.getMessage(), e);
+			throw new DriverException("Failed to setup driver binary for " + browser, e);
 		}
 	}
 

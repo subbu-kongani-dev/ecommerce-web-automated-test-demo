@@ -63,17 +63,49 @@ jobs:
           distribution: 'temurin'
           cache: maven
       
+      - name: Install System Dependencies (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            xvfb \
+            libxi6 \
+            libgconf-2-4 \
+            libnss3 \
+            libgbm1 \
+            libasound2
+      
+      - name: Start Xvfb (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo Xvfb :99 -ac -screen 0 1920x1080x24 > /dev/null 2>&1 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+      
       - name: Install Chrome Browser
         if: matrix.browser == 'chrome'
         uses: browser-actions/setup-chrome@latest
         with:
           chrome-version: stable
       
+      - name: Verify Chrome Installation
+        if: matrix.browser == 'chrome'
+        run: |
+          google-chrome --version
+          which google-chrome || true
+          chromedriver --version || echo "ChromeDriver not in PATH yet"
+      
       - name: Install Firefox Browser
         if: matrix.browser == 'firefox'
         uses: browser-actions/setup-firefox@latest
         with:
           firefox-version: latest
+      
+      - name: Verify Firefox Installation
+        if: matrix.browser == 'firefox'
+        run: |
+          firefox --version
+          which firefox || true
+          geckodriver --version || echo "GeckoDriver not in PATH yet"
       
       - name: Verify Maven Installation
         run: mvn -version

@@ -35,23 +35,45 @@ public class WebElementActions {
 
 	/**
 	 * Clicks on a web element with explicit wait for clickability.
+	 * Includes retry logic for StaleElementReferenceException.
 	 * 
 	 * @param driver      WebDriver instance
 	 * @param element     WebElement to click
 	 * @param elementName Optional name for logging (can be null)
-	 * @throws Exception if element is not clickable or click fails
+	 * @throws Exception if element is not clickable or click fails after retries
 	 */
 	public static void click(WebDriver driver, WebElement element, String elementName) {
-		try {
-			WaitUtil.waitForElementToBeClickable(driver, element);
-			element.click();
-			String logMessage = elementName != null ? "Clicked on element: " + elementName : "Clicked on element";
-			logger.info(logMessage);
-		} catch (Exception e) {
-			String errorMessage = elementName != null ? "Failed to click on element: " + elementName
-					: "Failed to click on element";
-			logger.error(errorMessage, e);
-			throw e;
+		int maxRetries = 3;
+		int attempt = 0;
+		
+		while (attempt < maxRetries) {
+			try {
+				WaitUtil.waitForElementToBeClickable(driver, element);
+				element.click();
+				String logMessage = elementName != null ? "Clicked on element: " + elementName : "Clicked on element";
+				logger.info(logMessage);
+				return; // Success, exit method
+			} catch (org.openqa.selenium.StaleElementReferenceException e) {
+				attempt++;
+				if (attempt >= maxRetries) {
+					String errorMessage = elementName != null 
+						? "Failed to click on element after " + maxRetries + " retries (StaleElementReferenceException): " + elementName
+						: "Failed to click on element after " + maxRetries + " retries (StaleElementReferenceException)";
+					logger.error(errorMessage, e);
+					throw e;
+				}
+				logger.warn("StaleElementReferenceException on attempt {}. Retrying...", attempt);
+				try {
+					Thread.sleep(500); // Brief pause before retry
+				} catch (InterruptedException ie) {
+					Thread.currentThread().interrupt();
+				}
+			} catch (Exception e) {
+				String errorMessage = elementName != null ? "Failed to click on element: " + elementName
+						: "Failed to click on element";
+				logger.error(errorMessage, e);
+				throw e;
+			}
 		}
 	}
 
