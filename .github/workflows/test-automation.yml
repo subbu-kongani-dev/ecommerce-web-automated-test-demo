@@ -50,7 +50,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         browser: [chrome, firefox]
-        java: [11]
+        java: [17]
     
     steps:
       - name: Checkout Repository
