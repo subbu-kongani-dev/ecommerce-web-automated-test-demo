@@ -11,39 +11,17 @@ import com.nopcommerce.models.BrowserConfig;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Safari-specific capability builder.
- * Implements Strategy pattern for Safari browser configuration.
+ * Safari-specific capability builder - YAML-driven approach.
  * 
- * <p>
- * Features:
- * </p>
- * <ul>
- * <li>Supports both local and remote execution</li>
- * <li>Applies Safari-specific capabilities</li>
- * <li>Supports LambdaTest cloud execution</li>
- * </ul>
+ * This builder is now purely configuration-driven. All Safari-specific settings
+ * should be defined in safari_local.yaml or safari_lambdatest.yaml files.
  * 
- * <p>
- * <strong>Important Notes:</strong>
- * </p>
- * <ul>
- * <li>Safari does NOT support headless mode</li>
- * <li>Safari does NOT support custom arguments</li>
- * <li>Safari has limited preference customization</li>
- * <li>Safari only runs on macOS (local) or cloud providers</li>
- * </ul>
+ * NO HARDCODING - All capabilities come from YAML configuration files.
  * 
- * <p>
- * Common Safari Capabilities:
- * </p>
- * <ul>
- * <li>safari:automaticInspection (Boolean) - Enables automatic inspection</li>
- * <li>safari:automaticProfiling (Boolean) - Enables automatic profiling</li>
- * <li>safari:diagnose (Boolean) - Enables diagnostic mode</li>
- * </ul>
+ * Note: Safari has limitations - no headless mode, limited arguments support.
  * 
  * @author NopCommerce Team
- * @version 2.0
+ * @version 3.0 - Refactored to eliminate hardcoding
  * @since 2.0
  */
 @Slf4j
@@ -51,31 +29,24 @@ public class SafariCapabilityBuilder implements CapabilityBuilder {
 
 	@Override
 	public MutableCapabilities build(BrowserConfig config) {
-		log.debug("Building Safari capabilities");
+		log.debug("Building Safari capabilities from YAML configuration");
 
 		SafariOptions options = new SafariOptions();
 
-		// Safari doesn't support headless mode
+		// Safari limitations warnings
 		if (config.isHeadless()) {
-			log.warn("Safari does not support headless mode. Headless configuration will be ignored.");
+			log.warn("Safari does not support headless mode. Headless flag will be ignored.");
 		}
-
-		// Safari doesn't support custom arguments
+		
 		if (config.getArguments() != null && !config.getArguments().isEmpty()) {
-			log.warn("Safari does not support custom arguments. {} arguments will be ignored.",
+			log.warn("Safari does not support custom arguments. {} arguments from YAML will be ignored.", 
 					config.getArguments().size());
 		}
 
-		// Safari has limited preference support
-		if (config.getPreferences() != null && !config.getPreferences().isEmpty()) {
-			log.warn("Safari has limited preference support. {} preferences may be ignored.",
-					config.getPreferences().size());
-		}
-
-		// Apply general capabilities (Safari-specific capabilities work here)
+		// Apply capabilities from YAML (Safari-specific capabilities)
 		if (config.getCapabilities() != null && !config.getCapabilities().isEmpty()) {
 			config.getCapabilities().forEach(options::setCapability);
-			log.debug("Applied {} Safari capabilities", config.getCapabilities().size());
+			log.debug("Applied {} Safari capabilities from YAML", config.getCapabilities().size());
 		}
 
 		// Apply remote config if present
@@ -83,15 +54,14 @@ public class SafariCapabilityBuilder implements CapabilityBuilder {
 			applyRemoteOptions(options, config);
 		}
 
-		log.info("Safari capabilities built successfully");
+		log.info("✅ Safari capabilities built successfully from YAML (capabilities={})",
+				config.getCapabilities() != null ? config.getCapabilities().size() : 0);
+		
 		return options;
 	}
 
 	/**
 	 * Applies cloud provider options (LambdaTest, BrowserStack, etc.).
-	 * 
-	 * @param options SafariOptions to apply remote settings to
-	 * @param config  BrowserConfig containing remote configuration
 	 */
 	private void applyRemoteOptions(SafariOptions options, BrowserConfig config) {
 		BrowserConfig.RemoteConfig remote = config.getRemoteConfig();
@@ -99,7 +69,7 @@ public class SafariCapabilityBuilder implements CapabilityBuilder {
 		if (remote.getOptions() != null && !remote.getOptions().isEmpty()) {
 			Map<String, Object> cloudOptions = new HashMap<>(remote.getOptions());
 			options.setCapability("LT:Options", cloudOptions);
-			log.debug("Applied {} remote cloud options", cloudOptions.size());
+			log.debug("Applied {} remote cloud options from YAML", cloudOptions.size());
 		}
 	}
 

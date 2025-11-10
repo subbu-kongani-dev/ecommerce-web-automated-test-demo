@@ -11,34 +11,15 @@ import com.nopcommerce.models.BrowserConfig;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Chrome-specific capability builder.
- * Implements Strategy pattern for Chrome browser configuration.
+ * Chrome-specific capability builder - YAML-driven approach.
  * 
- * <p>
- * Features:
- * </p>
- * <ul>
- * <li>Supports both local and remote execution</li>
- * <li>Configures headless mode with proper window size</li>
- * <li>Applies Chrome-specific arguments</li>
- * <li>Handles preferences and experimental options</li>
- * <li>Supports LambdaTest cloud execution</li>
- * </ul>
+ * This builder is now purely configuration-driven. All Chrome-specific settings
+ * should be defined in chrome_local.yaml or chrome_lambdatest.yaml files.
  * 
- * <p>
- * Common Chrome Arguments:
- * </p>
- * <ul>
- * <li>--headless=new - New headless mode (Chrome 109+)</li>
- * <li>--disable-gpu - Disable GPU acceleration</li>
- * <li>--no-sandbox - Disable sandbox (for Docker/CI)</li>
- * <li>--disable-dev-shm-usage - Overcome limited resource problems</li>
- * <li>--disable-extensions - Disable extensions</li>
- * <li>--disable-blink-features=AutomationControlled - Hide automation</li>
- * </ul>
+ * NO HARDCODING - All capabilities come from YAML configuration files.
  * 
  * @author NopCommerce Team
- * @version 2.0
+ * @version 3.0 - Refactored to eliminate hardcoding
  * @since 2.0
  */
 @Slf4j
@@ -46,85 +27,52 @@ public class ChromeCapabilityBuilder implements CapabilityBuilder {
 
 	@Override
 	public MutableCapabilities build(BrowserConfig config) {
-		log.debug("Building Chrome capabilities");
+		log.debug("Building Chrome capabilities from YAML configuration");
 
 		ChromeOptions options = new ChromeOptions();
 
-		// Apply headless mode with proper configuration for CI/CD environments
-		if (config.isHeadless()) {
-			options.addArguments("--headless=new");  // Modern headless mode (Chrome 109+)
-			options.addArguments("--disable-gpu");
-			options.addArguments("--no-sandbox");
-			options.addArguments("--disable-dev-shm-usage");
-			options.addArguments("--disable-software-rasterizer");
-			options.addArguments("--disable-extensions");
-			options.addArguments("--disable-logging");
-			options.addArguments("--disable-in-process-stack-traces");
-			options.addArguments("--log-level=3");
-			options.addArguments("--remote-debugging-port=9222");
-			options.addArguments("--disable-background-timer-throttling");
-			options.addArguments("--disable-backgrounding-occluded-windows");
-			options.addArguments("--disable-renderer-backgrounding");
-			options.addArguments("--disable-features=TranslateUI");
-			options.addArguments("--disable-ipc-flooding-protection");
-			options.addArguments("--metrics-recording-only");
-			options.addArguments("--mute-audio");
-			options.addArguments(String.format("--window-size=%d,%d",
-					config.getWindow().getWidth(),
-					config.getWindow().getHeight()));
-			
-			// Set page load strategy to eager for faster test execution in headless mode
-			options.setPageLoadStrategy(org.openqa.selenium.PageLoadStrategy.EAGER);
-			
-			log.info("✅ Headless mode enabled with enhanced CI/CD stability options. Window size: {}x{}", 
-					config.getWindow().getWidth(),
-					config.getWindow().getHeight());
-		}
-
-		// Apply arguments
+		// Apply arguments from YAML
 		if (config.getArguments() != null && !config.getArguments().isEmpty()) {
 			config.getArguments().forEach(options::addArguments);
-			log.debug("Applied {} Chrome arguments", config.getArguments().size());
+			log.debug("Applied {} Chrome arguments from YAML", config.getArguments().size());
 		}
 
-		// Apply preferences
+		// Apply preferences from YAML
 		if (config.getPreferences() != null && !config.getPreferences().isEmpty()) {
 			Map<String, Object> prefs = new HashMap<>(config.getPreferences());
 			options.setExperimentalOption("prefs", prefs);
-			log.debug("Applied {} Chrome preferences", prefs.size());
+			log.debug("Applied {} Chrome preferences from YAML", prefs.size());
 		}
 
-		// Apply general capabilities
+		// Apply capabilities from YAML
 		if (config.getCapabilities() != null && !config.getCapabilities().isEmpty()) {
 			config.getCapabilities().forEach(options::setCapability);
-			log.debug("Applied {} general capabilities", config.getCapabilities().size());
+			log.debug("Applied {} general capabilities from YAML", config.getCapabilities().size());
 		}
 
-		// Apply remote config if present (LambdaTest, BrowserStack, etc.)
+		// Apply remote config if present (for LambdaTest, BrowserStack, etc.)
 		if (config.getRemoteConfig() != null) {
 			applyRemoteOptions(options, config);
 		}
 
-		log.info("Chrome capabilities built successfully");
+		log.info("✅ Chrome capabilities built successfully from YAML (headless={}, args={}, prefs={})",
+				config.isHeadless(), 
+				config.getArguments() != null ? config.getArguments().size() : 0,
+				config.getPreferences() != null ? config.getPreferences().size() : 0);
+		
 		return options;
 	}
 
 	/**
-	 * Applies cloud provider options (LambdaTest, BrowserStack, Sauce Labs, etc.).
-	 * 
-	 * @param options ChromeOptions to apply remote settings to
-	 * @param config  BrowserConfig containing remote configuration
+	 * Applies cloud provider options (LambdaTest, BrowserStack, etc.).
 	 */
 	private void applyRemoteOptions(ChromeOptions options, BrowserConfig config) {
 		BrowserConfig.RemoteConfig remote = config.getRemoteConfig();
 
 		if (remote.getOptions() != null && !remote.getOptions().isEmpty()) {
 			Map<String, Object> cloudOptions = new HashMap<>(remote.getOptions());
-
-			// LambdaTest uses "LT:Options"
 			options.setCapability("LT:Options", cloudOptions);
-
-			log.debug("Applied {} remote cloud options", cloudOptions.size());
+			log.debug("Applied {} remote cloud options from YAML", cloudOptions.size());
 		}
 	}
 

@@ -1,30 +1,44 @@
 # Firefox Browser Configuration for Local Execution
+# All Firefox settings are defined here - NO HARDCODING in Java code
 browser: firefox
 platform: LOCAL
 
 # Firefox Options
 options:
-  args:
-    - --width=1920
-    - --height=1080
+  # Arguments for normal mode
+  args: []
+  
+  # Arguments for headless mode (applied when -Dheadless=true)
+  headlessArgs:
+    - -headless
   
   prefs:
+    # Basic preferences
     dom.webnotifications.enabled: false
     dom.push.enabled: false
-    media.navigator.enabled: false
-    media.peerconnection.enabled: false
-    geo.enabled: false
-    geo.provider.use_corelocation: false
-    geo.prompt.testing: false
-    geo.prompt.testing.allow: false
     browser.safebrowsing.malware.enabled: false
     browser.safebrowsing.phishing.enabled: false
-    devtools.jsonview.enabled: false
+    
+    # Headless mode stability preferences (applied when headless=true)
+    browser.startup.homepage: about:blank
+    startup.homepage_welcome_url: about:blank
+    startup.homepage_welcome_url.additional: ""
+    browser.tabs.remote.autostart: false
+    browser.tabs.remote.autostart.2: false
+    browser.sessionstore.resume_from_crash: false
+    browser.cache.disk.enable: false
+    browser.cache.memory.enable: true
+    browser.cache.offline.enable: false
+    network.http.use-cache: false
+    
+    # Window size for headless (as preferences, more reliable than args)
+    browser.window.width: 1920
+    browser.window.height: 1080
 
 # Capabilities
 capabilities:
   acceptInsecureCerts: true
-  pageLoadStrategy: normal
+  pageLoadStrategy: eager
   unhandledPromptBehavior: dismiss
 
 # Timeouts (in seconds)
@@ -39,5 +53,5 @@ window:
   width: 1920
   height: 1080
 
-# Headless Mode
+# Headless Mode (can be overridden via -Dheadless=true)
 headless: false

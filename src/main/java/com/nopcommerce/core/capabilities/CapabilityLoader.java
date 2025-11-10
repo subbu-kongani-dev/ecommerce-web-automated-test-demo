@@ -36,32 +36,45 @@ public class CapabilityLoader {
 
 		log.info("Loading capabilities from: {}", fileName);
 
-		try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName)) {
-			if (is == null) {
-				throw new ConfigurationException("Capability file not found: " + fileName);
-			}
+		// Use synchronized block to prevent concurrent YAML parsing issues
+		synchronized (this) {
+			try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName)) {
+				if (is == null) {
+					throw new ConfigurationException("Capability file not found: " + fileName);
+				}
 
-			Map<String, Object> yamlData = yaml.load(is);
-			
-			// Validate YAML data is not null or empty
-			if (yamlData == null || yamlData.isEmpty()) {
-				throw new ConfigurationException("YAML file is empty or invalid: " + fileName);
-			}
-			
-			BrowserConfig browserConfig = mapToConfig(yamlData);
-			
-			// Override headless mode from system property if present
-			String headlessOverride = System.getProperty("headless");
-			if (headlessOverride != null) {
-				boolean isHeadless = Boolean.parseBoolean(headlessOverride);
-				log.info("Overriding headless mode from system property: {}", isHeadless);
-				return browserConfig.toBuilder().headless(isHeadless).build();
-			}
-			
-			return browserConfig;
+				// Read all bytes first to avoid stream issues
+				byte[] yamlBytes = is.readAllBytes();
+				if (yamlBytes.length == 0) {
+					throw new ConfigurationException("YAML file is empty: " + fileName);
+				}
 
-		} catch (Exception e) {
-			throw new ConfigurationException("Failed to load capabilities: " + fileName, e);
+				// Parse YAML from byte array
+				Map<String, Object> yamlData = yaml.load(new java.io.ByteArrayInputStream(yamlBytes));
+				
+				// Validate YAML data is not null or empty
+				if (yamlData == null || yamlData.isEmpty()) {
+					throw new ConfigurationException("YAML file is empty or invalid: " + fileName);
+				}
+				
+				BrowserConfig browserConfig = mapToConfig(yamlData);
+				
+				// Override headless mode from system property if present
+				String headlessOverride = System.getProperty("headless");
+				if (headlessOverride != null) {
+					boolean isHeadless = Boolean.parseBoolean(headlessOverride);
+					log.info("Overriding headless mode from system property: {}", isHeadless);
+					return browserConfig.toBuilder().headless(isHeadless).build();
+				}
+				
+				return browserConfig;
+
+			} catch (ConfigurationException e) {
+				throw e;
+			} catch (Exception e) {
+				log.error("Failed to load capabilities from {}: {}", fileName, e.getMessage(), e);
+				throw new ConfigurationException("Failed to load capabilities: " + fileName, e);
+			}
 		}
 	}
 
@@ -72,10 +85,12 @@ public class CapabilityLoader {
 			throw new ConfigurationException("Missing required field 'browser' in YAML configuration");
 		}
 		
+		boolean isHeadless = (Boolean) data.getOrDefault("headless", false);
+		
 		BrowserConfig.BrowserConfigBuilder builder = BrowserConfig.builder()
 				.browser((String) data.get("browser"))
 				.platform((String) data.getOrDefault("platform", "LOCAL"))
-				.headless((Boolean) data.getOrDefault("headless", false));
+				.headless(isHeadless);
 
 		// Map capabilities
 		if (data.containsKey("capabilities")) {
@@ -83,15 +98,28 @@ public class CapabilityLoader {
 			caps.forEach((key, value) -> builder.capability(key, value));
 		}
 
-		// Map options
+		// Map options - SMART ARGUMENT HANDLING
 		if (data.containsKey("options")) {
 			Map<String, Object> options = (Map<String, Object>) data.get("options");
-			if (options.containsKey("args")) {
+			
+			// Handle arguments based on headless mode
+			if (isHeadless && options.containsKey("headlessArgs")) {
+				// Use headlessArgs for headless mode
+				List<String> headlessArgs = (List<String>) options.get("headlessArgs");
+				if (headlessArgs != null) {
+					headlessArgs.forEach(builder::argument);
+					log.debug("Applied {} headless-specific arguments from YAML", headlessArgs.size());
+				}
+			} else if (options.containsKey("args")) {
+				// Use regular args for non-headless mode
 				List<String> args = (List<String>) options.get("args");
 				if (args != null) {
 					args.forEach(builder::argument);
+					log.debug("Applied {} regular arguments from YAML", args.size());
 				}
 			}
+			
+			// Map preferences
 			if (options.containsKey("prefs")) {
 				Map<String, Object> prefs = (Map<String, Object>) options.get("prefs");
 				if (prefs != null) {

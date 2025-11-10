@@ -241,7 +241,7 @@ public class DriverFactory {
 	/**
 	 * Sets up driver binary using WebDriverManager.
 	 * Automatically downloads and configures the correct driver version.
-	 * Enhanced for CI/CD environments with proper caching and version detection.
+	 * Optimized for both local and CI/CD environments.
 	 * 
 	 * @param browser Browser name
 	 */
@@ -252,22 +252,19 @@ public class DriverFactory {
 			switch (browser.toLowerCase()) {
 				case "chrome" -> {
 					WebDriverManager.chromedriver()
-						.clearDriverCache()
-						.clearResolutionCache()
+						.cachePath("~/.cache/selenium")
 						.setup();
 					log.info("Chrome driver setup completed");
 				}
 				case "firefox" -> {
 					WebDriverManager.firefoxdriver()
-						.clearDriverCache()
-						.clearResolutionCache()
+						.cachePath("~/.cache/selenium")
 						.setup();
 					log.info("Firefox driver setup completed");
 				}
 				case "edge", "msedge" -> {
 					WebDriverManager.edgedriver()
-						.clearDriverCache()
-						.clearResolutionCache()
+						.cachePath("~/.cache/selenium")
 						.setup();
 					log.info("Edge driver setup completed");
 				}

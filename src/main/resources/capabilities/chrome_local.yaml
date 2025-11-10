@@ -1,20 +1,39 @@
 # Chrome Browser Configuration for Local Execution
+# All Chrome settings are defined here - NO HARDCODING in Java code
 browser: chrome
 platform: LOCAL
 
 # Chrome Options
 options:
+  # Arguments for normal (non-headless) mode
   args:
     - --start-maximized
-    - --disable-notifications
-    - --disable-popup-blocking
-    - --disable-dev-shm-usage
-    - --no-sandbox
-    - --disable-gpu
     - --remote-allow-origins=*
     - --disable-blink-features=AutomationControlled
-    - --disable-extensions
-    - --disable-setuid-sandbox
+  
+  # Arguments for headless mode (applied when -Dheadless=true)
+  headlessArgs:
+    - --headless=new
+    - --no-sandbox
+    - --disable-dev-shm-usage
+    - --disable-gpu
+    - --disable-software-rasterizer
+    - --disable-background-networking
+    - --disable-default-apps
+    - --disable-sync
+    - --disable-translate
+    - --hide-scrollbars
+    - --metrics-recording-only
+    - --mute-audio
+    - --no-first-run
+    - --safebrowsing-disable-auto-update
+    - --disable-background-timer-throttling
+    - --disable-backgrounding-occluded-windows
+    - --disable-renderer-backgrounding
+    - --disable-ipc-flooding-protection
+    - --log-level=3
+    - --silent
+    - --window-size=1920,1080
   
   experimentalOptions:
     excludeSwitches:
@@ -30,7 +49,7 @@ options:
 # Capabilities
 capabilities:
   acceptInsecureCerts: true
-  pageLoadStrategy: normal
+  pageLoadStrategy: eager
   unhandledPromptBehavior: dismiss
 
 # Timeouts (in seconds)
@@ -45,5 +64,5 @@ window:
   width: 1920
   height: 1080
 
-# Headless Mode
+# Headless Mode (can be overridden via -Dheadless=true)
 headless: false
