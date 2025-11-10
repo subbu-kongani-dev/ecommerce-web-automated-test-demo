@@ -18,7 +18,8 @@ public class HomePageTest extends BaseTest {
 		homePage = new HomePage(driver);
 		String actualTitle = homePage.getHomePageTitle();
 		logger.info("Actual page title: " + actualTitle);
-		Assert.assertTrue(actualTitle.contains("nopCommerce"), "Home page title should contain 'nopCommerce'");
+		Assert.assertTrue(actualTitle.contains("nopCommerce"),
+				"Home page title should contain 'nopCommerce'" + " but found: " + actualTitle);
 		logger.info("Test passed: Home page title verified successfully");
 	}
 
